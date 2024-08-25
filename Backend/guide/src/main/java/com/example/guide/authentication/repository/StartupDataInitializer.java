@@ -3,6 +3,8 @@ package com.example.guide.authentication.repository;
 import com.example.guide.authentication.models.ERole;
 import com.example.guide.authentication.models.Role;
 import com.example.guide.authentication.models.User;
+import com.example.guide.domain.Reader;
+import com.example.guide.repository.ReaderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -24,6 +26,9 @@ public class StartupDataInitializer {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private ReaderRepository readerRepository;
+
     @EventListener(ApplicationReadyEvent.class)
     public void onApplicationReady() {
         if (roleRepository.count() == 0) {
@@ -36,16 +41,23 @@ public class StartupDataInitializer {
 
             User adminUser = new User("admin",
                     "admin@gmail.com",encoder.encode("adminPass"));
-            adminUser.setRoles(new HashSet<>(Set.of(adminRole)));
             User modUser = new User("moderator",
                     "moder@gmail.com",encoder.encode("modPass"));
-            modUser.setRoles(new HashSet<>(Set.of(moderRole)));
             User userUser = new User("user",
                     "user@gmail.com",encoder.encode("userPass"));
+            adminUser.setRoles(new HashSet<>(Set.of(adminRole)));
+            modUser.setRoles(new HashSet<>(Set.of(moderRole)));
             userUser.setRoles(new HashSet<>(Set.of(userRole)));
-            userRepository.save(adminUser);
-            userRepository.save(modUser);
-            userRepository.save(userUser);
+            assignReader(adminUser);
+            assignReader(modUser);
+            assignReader(userUser);
         }
+    }
+
+    private void assignReader(User user) {
+        Reader reader = new Reader();
+        user.setReader(reader);
+        userRepository.save(user);
+        readerRepository.save(reader);
     }
 }
