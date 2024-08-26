@@ -1,5 +1,6 @@
 package com.example.guide.authentication.controllers;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -12,6 +13,7 @@ import com.example.guide.authentication.payload.request.LoginRequest;
 import com.example.guide.authentication.payload.request.SignupRequest;
 import com.example.guide.authentication.payload.response.JwtResponse;
 import com.example.guide.authentication.payload.response.MessageResponse;
+import com.example.guide.authentication.payload.response.UserRoleResponse;
 import com.example.guide.authentication.repository.RoleRepository;
 import com.example.guide.authentication.repository.UserRepository;
 import com.example.guide.authentication.security.jwt.JwtUtils;
@@ -126,31 +128,28 @@ public class AuthController {
     Set<String> strRoles = signUpRequest.getRole();
     Set<Role> roles = new HashSet<>();
     if (strRoles == null) {
-      Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-              .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-      roles.add(userRole);
+        Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+        roles.add(userRole);
+        user.setRoles(roles);
     } else {
-      strRoles.forEach(role -> {
-        switch (role) {
-          case "admin":
-            Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-            roles.add(adminRole);
-            break;
-          case "mod":
-            Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
-                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-            roles.add(modRole);
-            break;
-          default:
-            Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-            roles.add(userRole);
+        Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
+                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+        Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+        strRoles.forEach(role -> {
+            if (role.equals("mod")) {
+                roles.add(modRole);
+            } else {
+                roles.add(userRole);
+            }
+        });
+        if (roles.contains(modRole)) {
+          user.setRoles(Set.of(modRole));
+        } else {
+          user.setRoles(Set.of(userRole));
         }
-      });
     }
-    user.setRoles(roles);
-
     Reader reader = new Reader();
     user.setReader(reader);
     userRepository.save(user);
@@ -164,6 +163,25 @@ public class AuthController {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     UserDetails userDetails = (UserDetails) authentication.getPrincipal();
     return "Username: " + userDetails.getUsername();
+  }
+
+  @GetMapping("/userroles")
+  @PreAuthorize("hasRole('ADMIN')")
+  public List<UserRoleResponse> getUserRoles() {
+    List<UserRoleResponse> responseList = new ArrayList<>();
+    List<User> users = userRepository.findAll();
+    for (User user : users) {
+      UserRoleResponse response = new UserRoleResponse();
+      response.setUsername(user.getUsername());
+      response.setId(user.getId());
+
+      List<Role> roles = new ArrayList<>(user.getRoles());
+      String role = String.valueOf(roles.get(0).getName());
+      response.setRole(role);
+
+      responseList.add(response);
+    }
+    return responseList;
   }
 
   @DeleteMapping("/delete/{userId}")
