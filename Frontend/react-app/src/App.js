@@ -16,6 +16,7 @@ import BoardAdmin from "./components/BoardAdmin";
 import EventBus from "./common/EventBus";
 
 const App = () => {
+  const [showUserBoard, setShowUserBoard] = useState(false);
   const [showModeratorBoard, setShowModeratorBoard] = useState(false);
   const [showAdminBoard, setShowAdminBoard] = useState(false);
   const [currentUser, setCurrentUser] = useState(undefined);
@@ -25,6 +26,7 @@ const App = () => {
 
     if (user) {
       setCurrentUser(user);
+      setShowUserBoard(user.roles.includes("ROLE_USER"));
       setShowModeratorBoard(user.roles.includes("ROLE_MODERATOR"));
       setShowAdminBoard(user.roles.includes("ROLE_ADMIN"));
     }
@@ -48,9 +50,6 @@ const App = () => {
   return (
       <div>
         <nav className="navbar navbar-expand navbar-dark bg-dark">
-          <Link to={"/"} className="navbar-brand">
-            Library
-          </Link>
           <div className="navbar-nav mr-auto">
             <li className="nav-item">
               <Link to={"/home"} className="nav-link">
@@ -74,7 +73,7 @@ const App = () => {
                 </li>
             )}
 
-            {currentUser && (
+            {showUserBoard && (
                 <li className="nav-item">
                   <Link to={"/user"} className="nav-link">
                     User
