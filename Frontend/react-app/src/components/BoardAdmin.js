@@ -1,39 +1,51 @@
 import React, { useState, useEffect } from "react";
 
-import UserService from "../services/user.service";
-import EventBus from "../common/EventBus";
+import axios from "axios";
+import authHeader from "../services/auth-header";
+import UserRoleList from "./adminComponents/UserRoleList";
+import AddUserForm from "./adminComponents/AddUserForm";
+import "./styles/AdminBoard.css"
+
+const AUTH_URL = "http://localhost:8080/api/auth/";
 
 const BoardAdmin = () => {
-  const [content, setContent] = useState("");
+  const [userRoles, setUserRoles] = useState([]);
 
   useEffect(() => {
-    UserService.getAdminBoard().then(
-      (response) => {
-        setContent(response.data);
-      },
-      (error) => {
-        const _content =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-
-        setContent(_content);
-
-        if (error.response && error.response.status === 401) {
-          EventBus.dispatch("logout");
-        }
-      }
-    );
+    fetchUserRoles();
   }, []);
 
+  const fetchUserRoles = () => {
+    axios
+        .get(`${AUTH_URL}userroles`, { headers: authHeader() })
+        .then((response) => {
+          setUserRoles(response.data);
+        })
+        .catch((error) => {
+          console.error("There was an error fetching the user roles!", error);
+        });
+  };
+
+  const handleDelete = (userId) => {
+    axios
+        .delete(`${AUTH_URL}delete/${userId}`, { headers: authHeader() })
+        .then((response) => {
+          fetchUserRoles();
+        })
+        .catch((error) => {
+          console.error("There was an error deleting the user!", error);
+        });
+  };
+
   return (
-    <div className="container">
-      <header className="jumbotron">
-        <h3>{content}</h3>
-      </header>
-    </div>
+      <div className="containerAdmin">
+          <div className="user-role-list">
+            <UserRoleList userRoles={userRoles} onDelete={handleDelete} />
+          </div>
+          <div className="add-user-form">
+            <AddUserForm />
+          </div>
+      </div>
   );
 };
 

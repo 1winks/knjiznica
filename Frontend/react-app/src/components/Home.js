@@ -1,32 +1,31 @@
-import React, { useState, useEffect } from "react";
-
-import UserService from "../services/user.service";
+import React from 'react';
+import './styles/Home.css';
 
 const Home = () => {
-  const [content, setContent] = useState("");
-
-  useEffect(() => {
-    UserService.getPublicContent().then(
-      (response) => {
-        setContent(response.data);
-      },
-      (error) => {
-        const _content =
-          (error.response && error.response.data) ||
-          error.message ||
-          error.toString();
-
-        setContent(_content);
-      }
-    );
-  }, []);
-
   return (
-    <div className="container">
-      <header className="jumbotron">
-        <h3>{content}</h3>
-      </header>
-    </div>
+      <div className="home-container">
+        <header className="home-header">
+          <h1>Welcome to Our Library System</h1>
+          <p>Your one-stop solution for managing and accessing a vast collection of books.</p>
+        </header>
+        <section className="home-content">
+          <div className="feature">
+            <h2>Browse Books</h2>
+            <p>Explore our extensive collection of books by various authors, genres, and topics.</p>
+          </div>
+          <div className="feature">
+            <h2>Manage Borrowing</h2>
+            <p>Easily manage your borrowed books, track due dates, and renew your loans.</p>
+          </div>
+          <div className="feature">
+            <h2>Get Recommendations</h2>
+            <p>Receive personalized book recommendations based on your reading history and preferences.</p>
+          </div>
+        </section>
+        <footer className="home-footer">
+          <p>&copy; 2024 Library System. All rights reserved.</p>
+        </footer>
+      </div>
   );
 };
 
