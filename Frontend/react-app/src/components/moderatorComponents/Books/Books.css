@@ -1,0 +1,20 @@
+.bookMenu {
+    height: 5%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.bookContent {
+    border: 1px solid #666666;
+    height: 95%;
+    width: 100%;
+    display: flex;
+}
+
+.renderBookButton {
+    height: 100%;
+    width: 50%;
+    border: 1px solid #666666;
+}

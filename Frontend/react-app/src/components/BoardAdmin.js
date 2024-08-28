@@ -10,10 +10,11 @@ const AUTH_URL = "http://localhost:8080/api/auth/";
 
 const BoardAdmin = () => {
   const [userRoles, setUserRoles] = useState([]);
+  const [deleted, setDeleted] = useState(false);
 
   useEffect(() => {
     fetchUserRoles();
-  }, []);
+  }, [userRoles, deleted]);
 
   const fetchUserRoles = () => {
     axios
@@ -30,7 +31,7 @@ const BoardAdmin = () => {
     axios
         .delete(`${AUTH_URL}delete/${userId}`, { headers: authHeader() })
         .then((response) => {
-          fetchUserRoles();
+            setDeleted(!deleted);
         })
         .catch((error) => {
           console.error("There was an error deleting the user!", error);
