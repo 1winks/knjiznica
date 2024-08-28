@@ -14,7 +14,12 @@ const BoardAdmin = () => {
 
   useEffect(() => {
     fetchUserRoles();
-  }, [userRoles, deleted]);
+  }, [deleted]);
+
+  const handleUpdate = () => {
+      console.log("Tu sam 1");
+      setDeleted(!deleted);
+  }
 
   const fetchUserRoles = () => {
     axios
@@ -44,7 +49,7 @@ const BoardAdmin = () => {
             <UserRoleList userRoles={userRoles} onDelete={handleDelete} />
           </div>
           <div className="add-user-form">
-            <AddUserForm />
+            <AddUserForm onUpdate={handleUpdate}/>
           </div>
       </div>
   );

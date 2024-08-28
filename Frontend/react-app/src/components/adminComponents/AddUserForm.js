@@ -5,13 +5,18 @@ import "../styles/AddUserForm.css";
 
 const AUTH_URL = "http://localhost:8080/api/auth/admin/signup";
 
-const AddUserForm = () => {
+const AddUserForm = ({onUpdate}) => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [role, setRole] = useState('user');
     const [passwordError, setPasswordError] = useState('');
     const [usernameError, setUsernameError] = useState('');
+
+    const update = () => {
+        console.log("Tu sam 2");
+        onUpdate();
+    }
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -37,6 +42,7 @@ const AddUserForm = () => {
                 setEmail('');
                 setPassword('');
                 setRole('user');
+                update();
             })
             .catch((error) => {
                 console.error("There was an error creating the user!", error);
