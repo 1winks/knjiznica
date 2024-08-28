@@ -42,6 +42,7 @@ const App = () => {
 
   const logOut = () => {
     AuthService.logout();
+    setShowUserBoard(false);
     setShowModeratorBoard(false);
     setShowAdminBoard(false);
     setCurrentUser(undefined);
@@ -60,7 +61,7 @@ const App = () => {
             {showModeratorBoard && (
                 <li className="nav-item">
                   <Link to={"/mod"} className="nav-link">
-                    Moderator Board
+                    Moderator Content
                   </Link>
                 </li>
             )}
@@ -68,7 +69,7 @@ const App = () => {
             {showAdminBoard && (
                 <li className="nav-item">
                   <Link to={"/admin"} className="nav-link">
-                    Admin Board
+                    Admin Content
                   </Link>
                 </li>
             )}
@@ -76,7 +77,7 @@ const App = () => {
             {showUserBoard && (
                 <li className="nav-item">
                   <Link to={"/user"} className="nav-link">
-                    User
+                    User Content
                   </Link>
                 </li>
             )}
