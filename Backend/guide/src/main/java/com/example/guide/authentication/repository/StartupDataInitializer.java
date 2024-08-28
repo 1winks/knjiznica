@@ -48,8 +48,8 @@ public class StartupDataInitializer {
             adminUser.setRoles(new HashSet<>(Set.of(adminRole)));
             modUser.setRoles(new HashSet<>(Set.of(moderRole)));
             userUser.setRoles(new HashSet<>(Set.of(userRole)));
-            assignReader(adminUser);
-            assignReader(modUser);
+            userRepository.save(adminUser);
+            userRepository.save(modUser);
             assignReader(userUser);
         }
     }

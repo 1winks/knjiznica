@@ -130,6 +130,10 @@ public class AuthController {
                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
         roles.add(userRole);
         user.setRoles(roles);
+        Reader reader = new Reader();
+        user.setReader(reader);
+        userRepository.save(user);
+        readerRepository.save(reader);
     } else {
         Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
@@ -144,14 +148,15 @@ public class AuthController {
         });
         if (roles.contains(modRole)) {
           user.setRoles(Set.of(modRole));
+          userRepository.save(user);
         } else {
           user.setRoles(Set.of(userRole));
+          Reader reader = new Reader();
+          user.setReader(reader);
+          userRepository.save(user);
+          readerRepository.save(reader);
         }
     }
-    Reader reader = new Reader();
-    user.setReader(reader);
-    userRepository.save(user);
-    readerRepository.save(reader);
     return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
   }
 
