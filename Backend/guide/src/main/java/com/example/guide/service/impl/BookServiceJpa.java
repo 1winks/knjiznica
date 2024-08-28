@@ -30,7 +30,6 @@ public class BookServiceJpa implements BookService {
         book.setTitle(bookDTO.getTitle());
         book.setAuthor(bookDTO.getAuthor());
         book.setGenre(bookDTO.getGenre());
-        book.setCover(bookDTO.getCover());
         return bookRepo.save(book);
     }
 
@@ -41,7 +40,6 @@ public class BookServiceJpa implements BookService {
         book.setTitle(bookDTO.getTitle());
         book.setAuthor(bookDTO.getAuthor());
         book.setGenre(bookDTO.getGenre());
-        book.setCover(bookDTO.getCover());
         return bookRepo.save(book);
     }
 

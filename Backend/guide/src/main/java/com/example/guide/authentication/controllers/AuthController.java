@@ -1,9 +1,6 @@
 package com.example.guide.authentication.controllers;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.example.guide.authentication.models.ERole;
@@ -23,6 +20,7 @@ import com.example.guide.repository.ReaderRepository;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -174,12 +172,12 @@ public class AuthController {
       UserRoleResponse response = new UserRoleResponse();
       response.setUsername(user.getUsername());
       response.setId(user.getId());
-
       List<Role> roles = new ArrayList<>(user.getRoles());
       String role = String.valueOf(roles.get(0).getName());
       response.setRole(role);
-
-      responseList.add(response);
+      if (!Objects.equals(role, "ROLE_ADMIN")) {
+        responseList.add(response);
+      }
     }
     return responseList;
   }
@@ -189,6 +187,14 @@ public class AuthController {
   public ResponseEntity<?> deleteUser(@PathVariable Long userId) {
     if (!userRepository.existsById(userId)) {
       return ResponseEntity.notFound().build();
+    }
+    User user = userRepository.findById(userId)
+            .orElseThrow(() -> new RuntimeException("Error: User is not found."));
+    List<Role> roles = new ArrayList<>(user.getRoles());
+    String role = String.valueOf(roles.get(0).getName());
+    if (Objects.equals(role, "ROLE_ADMIN")) {
+      return ResponseEntity.status(HttpStatus.FORBIDDEN)
+              .body(new MessageResponse("Error: Admin users cannot be deleted."));
     }
     userRepository.deleteById(userId);
     return ResponseEntity.ok(new MessageResponse("User deleted successfully!"));
