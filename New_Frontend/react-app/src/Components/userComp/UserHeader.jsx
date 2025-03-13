@@ -1,9 +1,11 @@
 import React from 'react';
 import {useNavigate} from "react-router-dom";
-import {clearJwt} from "../../Utils/userData";
+import {clearJwt, getUsernameFromJwt} from "../../Utils/userData";
 
 const UserHeader = () => {
     const navigate = useNavigate();
+
+    const username = getUsernameFromJwt();
 
     const handleLogout = () => {
         clearJwt();
@@ -11,11 +13,15 @@ const UserHeader = () => {
     }
 
     return (
-        <>
-            <div>
-                <button className="logoutButton" onClick={handleLogout}>Logout</button>
+        <div className="userHeader">
+            <div>Knjiznica</div>
+            <div className="logoutName">
+                <div>{username}</div>
+                <div>
+                    <button className="logoutButton" onClick={handleLogout}>Logout</button>
+                </div>
             </div>
-        </>
+        </div>
     );
 };
 

@@ -138,5 +138,38 @@
 .registerForm form button:hover {
     background-color: black;
     color: white;
+}
 
+.userHeader {
+    height: 10vh;
+    padding: 1rem;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+    background-color: black;
+    color: white;
+}
+
+.logoutName {
+    display: flex;
+    width: 20%;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.logoutName button {
+    background-color: black;
+    color: white;
+    border: 3px solid white;
+    border-radius: 5px;
+    padding: 0.5rem;
+    cursor: pointer;
+}
+
+.logoutName button:hover {
+    background-color: white;
+    color: black;
 }
