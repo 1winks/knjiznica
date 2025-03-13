@@ -1,5 +1,6 @@
 import React from 'react';
 import {Link} from "react-router-dom";
+import Footer from "./Footer";
 
 const Welcome = () => {
     return (
@@ -60,9 +61,7 @@ const Welcome = () => {
                     </main>
                 </div>
             </main>
-            <footer className="welcome-footer">
-                <p>&copy; 2025 Your Company. All rights reserved.</p>
-            </footer>
+            <Footer/>
         </div>
     );
 };

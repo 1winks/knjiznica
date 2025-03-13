@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {Link, useNavigate} from "react-router-dom";
+import Footer from "./Footer";
 
 const Login = () => {
     const [username, setUsername] = useState('');
@@ -39,8 +40,8 @@ const Login = () => {
             }
 
             const data = await response.json();
-            console.log("Login successful:", data);
-            localStorage.setItem("userData", JSON.stringify(data));
+            const jwt = data.accessToken;
+            localStorage.setItem("jwt", jwt);
             navigate("/home");
         } catch (error) {
             setErrorMessage(error.message);
@@ -48,38 +49,39 @@ const Login = () => {
     }
 
         return (
-            <div className="formContainer">
-                <div className="homeButton"><Link className="link" to="/">Back to Home</Link></div>
-                <div className="registerForm">
-                    <h2>Login</h2>
-                    {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-                    <form onSubmit={handleSubmit}>
-                        <div>
-                            <label htmlFor="username">Username</label>
-                            <input
-                                type="username"
-                                id="username"
-                                name="username"
-                                value={username}
-                                onChange={handleUsernameChange}
-                                required
-                            />
-                        </div>
-                        <div>
-                            <label htmlFor="password">Password</label>
-                            <input
-                                type="password"
-                                id="password"
-                                name="password"
-                                value={password}
-                                onChange={handlePasswordChange}
-                                required
-                            />
-                        </div>
-                        <button type="submit">Login</button>
-                    </form>
+                <div className="formContainer">
+                    <div className="homeButton"><Link className="link" to="/">Back to Home</Link></div>
+                    <div className="registerForm">
+                        <h2>Login</h2>
+                        {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+                        <form onSubmit={handleSubmit}>
+                            <div>
+                                <label htmlFor="username">Username</label>
+                                <input
+                                    type="username"
+                                    id="username"
+                                    name="username"
+                                    value={username}
+                                    onChange={handleUsernameChange}
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="password">Password</label>
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    value={password}
+                                    onChange={handlePasswordChange}
+                                    required
+                                />
+                            </div>
+                            <button type="submit">Login</button>
+                        </form>
+                    </div>
+                    <Footer/>
                 </div>
-            </div>
         );
 }
 

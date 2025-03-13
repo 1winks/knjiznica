@@ -1,11 +1,14 @@
 import React, {useState} from 'react';
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+import Footer from "./Footer";
 
 const Register = () => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+
+    const navigate = useNavigate();
 
     const handleUsernameChange = (e) => {
         setUsername(e.target.value);
@@ -38,11 +41,11 @@ const Register = () => {
         })
             .then(response => response.json())
             .then(data => {
-                console.log('Success:', data);
-                alert("Registration successful!");
                 setUsername('');
                 setEmail('');
                 setPassword('');
+                navigate("/")
+                alert("Registration successful!")
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -92,6 +95,7 @@ const Register = () => {
                     <button type="submit">Register</button>
                 </form>
             </div>
+            <Footer/>
         </div>
     );
 };

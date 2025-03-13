@@ -1,17 +1,15 @@
 import React from 'react';
-import { getUserData, getJwt } from "../../Utils/userData.js";
+import { getJwt, getUsernameFromJwt } from "../../Utils/userData.js";
 
 const Home = () => {
-    const userData = getUserData();
-    const jwt = getJwt();
+    const jwt = getJwt()
+    const username = getUsernameFromJwt();
 
     return (
         <>
-            <header>User Page lolpaulo gaming</header>
-            <main>
-                <div>{Object.entries(userData)}</div>
-                <div>{Object.entries(jwt)}</div>
-            </main>
+            <div>
+                <div>Username: {username}</div>
+            </div>
         </>
     );
 };
