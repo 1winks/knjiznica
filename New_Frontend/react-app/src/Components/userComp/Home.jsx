@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {getJwt} from "../../Utils/userData.js";
-import UserHome from "./UserHome";
-import ModeratorHome from "./ModeratorHome";
-import AdminHome from "./AdminHome";
+import UserHome from "./readerComp/UserHome";
+import ModeratorHome from "./ModComp/ModeratorHome";
+import AdminHome from "./AdminComp/AdminHome";
 
 const Home = () => {
-    const [role, setRole] = useState(null);
+    const [role, setRole] = useState("");
 
     useEffect( () => {
         fetch('http://localhost:8080/api/auth/profile', {
