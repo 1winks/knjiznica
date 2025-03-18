@@ -8,6 +8,8 @@ const AdminView = () => {
     const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredUsers, setFilteredUsers] = useState([]);
+    const [ roleSort, setRoleSort ] = useState(true);
+    const [ nameSort, setNameSort ] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -34,8 +36,14 @@ const AdminView = () => {
         fetchData();
     }, []);
 
+    useEffect(() => {
+        const filtered = data.filter((user) =>
+            user.username.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        setFilteredUsers(filtered);
+    }, [searchTerm, data]);
+
     const onDelete = async (id) => {
-        console.log(id)
         try {
             const response = await fetch(`http://localhost:8080/api/auth/delete/${id}`, {
                 method: 'DELETE',
@@ -56,14 +64,23 @@ const AdminView = () => {
             setError(error.message);
             console.error('Error deleting user:', error);
         }
+
     }
 
-    useEffect(() => {
-        const filtered = data.filter((user) =>
-            user.username.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-        setFilteredUsers(filtered);
-    }, [searchTerm, data]);
+    const sortRoles = () => {
+        const roleOrder = roleSort ?
+            {"ROLE_MODERATOR":1, "ROLE_USER":2} : {"ROLE_MODERATOR":2, "ROLE_USER":1}
+        setFilteredUsers(prevUsers =>
+            prevUsers.toSorted((a, b) => roleOrder[a.role] - roleOrder[b.role]));
+        setRoleSort(prev => !prev);
+    }
+
+    const sortNames = () => {
+        setFilteredUsers(prevUsers =>
+            prevUsers.toSorted((a,b) => nameSort ?
+                a.username.localeCompare(b.username) : b.username.localeCompare(a.username)));
+        setNameSort(prev => !prev);
+    }
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
@@ -78,7 +95,9 @@ const AdminView = () => {
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
             </div>
-            <UserTable users={filteredUsers} onDelete={onDelete}/>
+            <UserTable users={filteredUsers} onDelete={onDelete}
+                       sortRoles={sortRoles} sortNames={sortNames}
+                        nameSort={nameSort} roleSort={roleSort}/>
         </div>
     );
 };
