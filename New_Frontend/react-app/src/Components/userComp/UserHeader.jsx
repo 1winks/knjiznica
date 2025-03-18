@@ -14,7 +14,7 @@ const UserHeader = () => {
 
     return (
         <div className="userHeader">
-            <div>Library</div>
+            <div><h2>Library</h2></div>
             <div className="logoutName">
                 <div>{username}</div>
                 <div>

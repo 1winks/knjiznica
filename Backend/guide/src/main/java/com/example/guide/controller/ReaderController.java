@@ -1,6 +1,7 @@
 package com.example.guide.controller;
 import com.example.guide.domain.Reader;
 import com.example.guide.dto.ReaderDTO;
+import com.example.guide.dto.ReadersResponse;
 import com.example.guide.service.ReaderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,7 +18,7 @@ public class ReaderController {
 
     @GetMapping("")
     @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
-    public List<Reader> listReaders(){
+    public List<ReadersResponse> listReaders(){
         return readerService.listAll();
     }
 

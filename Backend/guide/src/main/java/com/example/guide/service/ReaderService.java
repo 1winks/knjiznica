@@ -2,11 +2,12 @@ package com.example.guide.service;
 
 import com.example.guide.domain.Reader;
 import com.example.guide.dto.ReaderDTO;
+import com.example.guide.dto.ReadersResponse;
 
 import java.util.List;
 
 public interface ReaderService {
-    List<Reader> listAll();
+    List<ReadersResponse> listAll();
 
     Reader getReaderById(Long readerId);
 

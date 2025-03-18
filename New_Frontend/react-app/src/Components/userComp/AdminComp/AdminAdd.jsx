@@ -56,7 +56,7 @@ const AdminAdd = () => {
                 setEmail('');
                 setPassword('');
                 setRole('user')
-                alert("User added!")
+                role === "mod" ? alert("Moderator added!") : alert("User added!");
             })
             .catch(error => {
                 console.error('Error:', error);

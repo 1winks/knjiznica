@@ -12,6 +12,11 @@ const UserTable = ({ users, onDelete, sortRoles, sortNames, roleSort, nameSort }
                     Sort By Role {roleSort ? "▼" : "▲"}
                 </button>
             </div>
+            <div className="adminTableHeader">
+                <div>Username:</div>
+                <div>Role:</div>
+                <div className="deleteDiv">Delete:</div>
+            </div>
             {users.map(user => (
                 <UserRow key={user.id} {...user} onDelete={onDelete}/>
             ))}

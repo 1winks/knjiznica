@@ -2,11 +2,13 @@ package com.example.guide.service.impl;
 
 import com.example.guide.domain.Reader;
 import com.example.guide.dto.ReaderDTO;
+import com.example.guide.dto.ReadersResponse;
 import com.example.guide.repository.ReaderRepository;
 import com.example.guide.service.ReaderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -14,8 +16,19 @@ public class ReaderServiceJpa implements ReaderService {
     @Autowired
     private ReaderRepository readerRepo;
     @Override
-    public List<Reader> listAll() {
-        return readerRepo.findAll();
+    public List<ReadersResponse> listAll() {
+        List<Reader> readers = readerRepo.findAll();
+        List<ReadersResponse> responseList = new ArrayList<>();
+        for (Reader reader : readers) {
+            ReadersResponse response = new ReadersResponse();
+            response.setReaderId(reader.getId());
+            response.setUsername(reader.getUser().getUsername());
+            response.setEmail(reader.getUser().getEmail());
+            response.setAddress(reader.getAddress());
+            response.setPhoneNumber(reader.getPhoneNumber());
+            responseList.add(response);
+        }
+        return responseList;
     }
 
     @Override

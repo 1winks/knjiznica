@@ -1,0 +1,30 @@
+import React from 'react';
+import ReaderRow from "./ReaderRow";
+
+const ReaderTable = ({ readers, onUpdate, sortNames, nameSort, sortEmails, emailSort }) => {
+    return (
+        <div className="readerTable">
+            <div>
+                <button className="sortButton" onClick={sortNames}>
+                    Sort By Name {nameSort ? "▲" : "▼"}
+                </button>
+                <button className="sortButton" onClick={sortEmails}>
+                    Sort By E-mail {emailSort ? "▲" : "▼"}
+                </button>
+            </div>
+            <div className="readerTableHeader">
+                <div>Username:</div>
+                <div>Email:</div>
+                <div>Address:</div>
+                <div>Phone-number:</div>
+                <div className="updateDiv">update:</div>
+            </div>
+            {readers.map(reader => (
+                <ReaderRow key={reader.readerId} {...reader} onUpdate={onUpdate}/>
+            ))}
+            {readers.map(reader => console.log(reader))}
+        </div>
+    );
+};
+
+export default ReaderTable;
