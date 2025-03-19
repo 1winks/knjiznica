@@ -1,7 +1,7 @@
 import React from 'react';
 import ReaderRow from "./ReaderRow";
 
-const ReaderTable = ({ readers, onUpdate, sortNames, nameSort, sortEmails, emailSort }) => {
+const ReaderTable = ({ readers, sortNames, nameSort, sortEmails, emailSort, onUpdate, SetSelectedReaderId }) => {
     return (
         <div className="readerTable">
             <div>
@@ -20,9 +20,9 @@ const ReaderTable = ({ readers, onUpdate, sortNames, nameSort, sortEmails, email
                 <div className="updateDiv">update:</div>
             </div>
             {readers.map(reader => (
-                <ReaderRow key={reader.readerId} {...reader} onUpdate={onUpdate}/>
+                <ReaderRow key={reader.readerId} {...reader}
+                           onUpdate={onUpdate} SetSelectedReaderId={SetSelectedReaderId}/>
             ))}
-            {readers.map(reader => console.log(reader))}
         </div>
     );
 };

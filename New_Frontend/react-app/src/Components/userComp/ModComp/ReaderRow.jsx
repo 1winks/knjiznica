@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ReaderRow = ({readerId, username, email, address, phoneNumber, onUpdate}) => {
+const ReaderRow = ({ readerId, username, email, address, phoneNumber, onUpdate, SetSelectedReaderId }) => {
     return (
         <div className="readerRow">
             <div>{username}</div>
@@ -8,7 +8,10 @@ const ReaderRow = ({readerId, username, email, address, phoneNumber, onUpdate}) 
             <div>{address === null ? "-" : address}</div>
             <div>{phoneNumber === null ? "-" : phoneNumber}</div>
             <div>
-                <button className="update-btn" onClick={() => onUpdate(readerId)}>Update</button>
+                <button className="update-btn" onClick={() => {
+                    SetSelectedReaderId(readerId);
+                    onUpdate();
+                }}>Update</button>
             </div>
         </div>
     );

@@ -6,10 +6,14 @@ const AdminView = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredUsers, setFilteredUsers] = useState([]);
     const [ roleSort, setRoleSort ] = useState(true);
     const [ nameSort, setNameSort ] = useState(true);
+
+    const [modal, setModal] = useState(false);
+    const [selectedUserId, SetSelectedUserId] = useState(0);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -52,19 +56,18 @@ const AdminView = () => {
                     'Authorization': `Bearer ${getJwt()}`,
                 }
             });
-
             if (!response.ok) {
                 const errorData = await response.json();
                 throw new Error(errorData.message || 'Failed to delete user');
             }
             setData(data.filter(user => user.id !== id));
             setFilteredUsers(filteredUsers.filter(user => user.id !== id));
-            alert('User deleted successfully');
         } catch (error) {
             setError(error.message);
             console.error('Error deleting user:', error);
+        } finally {
+            closeModal();
         }
-
     }
 
     const sortRoles = () => {
@@ -82,6 +85,11 @@ const AdminView = () => {
         setNameSort(prev => !prev);
     }
 
+    const closeModal = () => {
+        SetSelectedUserId(0);
+        setModal(false);
+    }
+
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
     return (
@@ -95,9 +103,24 @@ const AdminView = () => {
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
             </div>
-            <UserTable users={filteredUsers} onDelete={onDelete}
+            <UserTable users={filteredUsers} onDelete={() => setModal(true)}
                        sortRoles={sortRoles} sortNames={sortNames}
-                        nameSort={nameSort} roleSort={roleSort}/>
+                       nameSort={nameSort} roleSort={roleSort}
+                       SetSelectedUserId={SetSelectedUserId}/>
+            {modal && (
+                <div className="modal">
+                    <div className="modal-content">
+                        <h2>Are you sure you want to delete this user?</h2>
+                        <div className="modal-buttons">
+                            <button className="delete-btn2"
+                                    onClick={() => onDelete(selectedUserId)}>
+                                Delete
+                            </button>
+                            <button onClick={closeModal}>Close</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

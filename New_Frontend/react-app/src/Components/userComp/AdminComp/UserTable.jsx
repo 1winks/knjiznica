@@ -1,7 +1,7 @@
 import React from 'react';
 import UserRow from "./UserRow";
 
-const UserTable = ({ users, onDelete, sortRoles, sortNames, roleSort, nameSort }) => {
+const UserTable = ({ users, onDelete, sortRoles, sortNames, roleSort, nameSort, SetSelectedUserId }) => {
     return (
         <div className="user-table">
             <div>
@@ -18,7 +18,8 @@ const UserTable = ({ users, onDelete, sortRoles, sortNames, roleSort, nameSort }
                 <div className="deleteDiv">Delete:</div>
             </div>
             {users.map(user => (
-                <UserRow key={user.id} {...user} onDelete={onDelete}/>
+                <UserRow key={user.id} {...user}
+                         onDelete={onDelete} SetSelectedUserId={SetSelectedUserId}/>
             ))}
         </div>
     );

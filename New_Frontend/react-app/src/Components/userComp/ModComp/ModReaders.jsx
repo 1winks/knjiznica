@@ -6,10 +6,17 @@ const ModReaders = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [formError, setFormError] = useState("");
+
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredUsers, setFilteredUsers] = useState([]);
     const [nameSort, setNameSort] = useState(true);
     const [emailSort, setEmailSort] = useState(true);
+
+    const [modal, setModal] = useState(false);
+    const [selectedReaderId, SetSelectedReaderId] = useState(0);
+    const [inputAddressValue, setInputAddressValue] = useState("");
+    const [inputPhoneValue, setInputPhoneValue] = useState("");
 
     useEffect(() => {
         const fetchData = async () => {
@@ -26,7 +33,6 @@ const ModReaders = () => {
                 }
                 const result = await response.json();
                 setData(result);
-                setFilteredUsers(result);
             } catch (error) {
                 setError(error.message);
             } finally {
@@ -44,8 +50,42 @@ const ModReaders = () => {
         setFilteredUsers(filtered);
     }, [searchTerm, data]);
 
-    const onUpdate = (readerId) => {
-        console.log(readerId);
+    const onUpdate = async (readerId) => {
+        if (inputAddressValue.trim() === "" || inputPhoneValue.trim() === "") {
+            setFormError("Input cannot be empty!");
+            return;
+        } else {
+            setFormError("");
+            console.log("Form submitted with value:", );
+        }
+        try {
+            const response = await fetch(
+                `http://localhost:8080/api/resources/readers/update/${readerId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getJwt()}`
+                },
+                body: JSON.stringify({
+                    address: inputAddressValue,
+                    phoneNumber: inputPhoneValue
+                })
+            });
+            if (!response.ok) {
+                throw new Error('Failed to fetch data');
+            }
+            setData((prevData) =>
+                prevData.map((reader) =>
+                    reader.readerId === readerId ?
+                        { ...reader, address: inputAddressValue, phoneNumber: inputPhoneValue }
+                        : reader
+                )
+            );
+        } catch (err) {
+            setError(error.message);
+        } finally {
+            closeModal();
+        }
     }
 
     const sortNames = () => {
@@ -61,6 +101,17 @@ const ModReaders = () => {
         setEmailSort(prev => !prev);
     }
 
+    const closeModal = () => {
+        SetSelectedReaderId(0);
+        setInputAddressValue('');
+        setInputPhoneValue('');
+        setModal(false);
+    }
+
+    const findReaderById = () => {
+        return data.find((r) => r.readerId === selectedReaderId);
+    }
+
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
     return (
@@ -74,9 +125,37 @@ const ModReaders = () => {
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
             </div>
-            <ReaderTable readers={filteredUsers} onUpdate={onUpdate}
+            <ReaderTable readers={filteredUsers} onUpdate={() => setModal(true)}
                          nameSort={nameSort} sortNames={sortNames}
-                            sortEmails={sortEmails} emailSort={emailSort}/>
+                         sortEmails={sortEmails} emailSort={emailSort}
+                         SetSelectedReaderId={SetSelectedReaderId}
+            />
+            {modal && (
+                <div className="modal">
+                    <div className="modal-content">
+                        <h2>Update Reader</h2>
+                        {formError && <div style={{ color: "red" }}>{formError}</div>}
+                        <div className="labels">
+                            <label>Address:</label>
+                            <input type="text" value={inputAddressValue}
+                                   placeholder={findReaderById()?.address || "Enter address"}
+                                   onChange={(e) =>
+                                       setInputAddressValue(e.target.value)} required />
+                        </div>
+                        <div className="labels">
+                            <label>Phone Number:</label>
+                            <input type="text" value={inputPhoneValue}
+                                   placeholder={findReaderById()?.phoneNumber || "Enter phone number"}
+                                   onChange={(e) =>
+                                       setInputPhoneValue(e.target.value)} required />
+                        </div>
+                        <div className="modal-buttons">
+                            <button onClick={() => onUpdate(selectedReaderId)}>Save</button>
+                            <button onClick={closeModal}>Close</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
