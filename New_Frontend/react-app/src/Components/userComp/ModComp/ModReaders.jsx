@@ -6,7 +6,6 @@ const ModReaders = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [formError, setFormError] = useState("");
 
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredUsers, setFilteredUsers] = useState([]);
@@ -14,6 +13,7 @@ const ModReaders = () => {
     const [emailSort, setEmailSort] = useState(true);
 
     const [modal, setModal] = useState(false);
+    const [formError, setFormError] = useState("");
     const [selectedReaderId, SetSelectedReaderId] = useState(0);
     const [inputAddressValue, setInputAddressValue] = useState("");
     const [inputPhoneValue, setInputPhoneValue] = useState("");

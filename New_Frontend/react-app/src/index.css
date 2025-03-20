@@ -413,3 +413,56 @@ button.delete-btn2:hover {
     background-color: crimson;
     border: 3px solid crimson;
 }
+
+.modBooks {
+    height: 100%;
+}
+
+.bookTableHeader {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr auto;
+    align-items: center;
+    margin: 0.5rem 1rem 0;
+}
+
+.bookTable {
+    display: flex;
+    flex-direction: column;
+    margin: 0 1rem;
+}
+
+.bookRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr auto;
+    align-items: center;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    padding: 0.8rem;
+}
+
+.bookTable > div {
+    display: flex;
+    justify-content: space-between;
+}
+
+.adder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 3px solid black;
+    border-radius: 5px;
+    padding: 0.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: white;
+}
+
+.adder:hover {
+    background-color: black;
+    color: white;
+}
+
+.bookRowButtons {
+    display: flex;
+    gap: 0.3rem;
+}

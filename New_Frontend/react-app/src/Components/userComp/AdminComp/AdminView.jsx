@@ -61,7 +61,6 @@ const AdminView = () => {
                 throw new Error(errorData.message || 'Failed to delete user');
             }
             setData(data.filter(user => user.id !== id));
-            setFilteredUsers(filteredUsers.filter(user => user.id !== id));
         } catch (error) {
             setError(error.message);
             console.error('Error deleting user:', error);
