@@ -2,7 +2,7 @@ import React from 'react';
 import BookRow from "./BookRow";
 
 const BookTable = ({ books, titleSort, authorSort, genreSort, alphaSorter,
-                       setAddModal, setUpdateModal, setDeleteModal, setSelectedBookId }) => {
+                       setAddModal, setUpdateModal, setDeleteModal, setEditionsModal, setSelectedBookId }) => {
     return (
         <div className="bookTable">
             <div>
@@ -29,7 +29,8 @@ const BookTable = ({ books, titleSort, authorSort, genreSort, alphaSorter,
             </div>
             {books.map(book => (
                 <BookRow key={book.id} {...book} setUpdateModal={setUpdateModal}
-                         setDeleteModal={setDeleteModal} setSelectedBookId={setSelectedBookId}/>
+                         setDeleteModal={setDeleteModal} setEditionsModal={setEditionsModal}
+                         setSelectedBookId={setSelectedBookId}/>
             ))}
         </div>
     );

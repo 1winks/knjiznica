@@ -30,7 +30,7 @@ const AddBookMod = ({closeModal, formError, onAdd, findBookById,
                                setInputGenreValue(e.target.value)}/>
                 </div>
                 <div className="modal-buttons">
-                    <button onClick={() => onAdd()}>Save</button>
+                    <button onClick={() => onAdd()}>Create</button>
                     <button onClick={closeModal}>Close</button>
                 </div>
             </div>

@@ -1,12 +1,19 @@
 import React from 'react';
 
-const BookRow = ({ id, title, author, genre, setUpdateModal, setDeleteModal, setSelectedBookId }) => {
+const BookRow = ({ id, title, author, genre,
+                     setUpdateModal, setDeleteModal, setEditionsModal, setSelectedBookId }) => {
     return (
         <div className="bookRow">
             <div>{title}</div>
             <div>{author}</div>
             <div>{genre}</div>
             <div className="bookRowButtons">
+                <button className="edition-btn" onClick={() => {
+                    setSelectedBookId(id);
+                    setEditionsModal(true);
+                }}>
+                    Editions
+                </button>
                 <button className="update-btn" onClick={() => {
                     setSelectedBookId(id);
                     setUpdateModal(true);

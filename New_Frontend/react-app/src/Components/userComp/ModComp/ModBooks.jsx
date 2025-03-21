@@ -4,6 +4,7 @@ import {getJwt} from "../../../Utils/userData";
 import AddBookMod from "./Modals/AddBookMod";
 import DeleteBookMod from "./Modals/DeleteBookMod";
 import UpdateBookMod from "./Modals/UpdateBookMod";
+import EditionsMod from "./Modals/Editions/EditionsMod";
 
 const ModBooks = () => {
     const [data, setData] = useState([]);
@@ -18,13 +19,15 @@ const ModBooks = () => {
 
     const [selectedBookId, SetSelectedBookId] = useState(0);
     const [formError, setFormError] = useState("");
-    const [addModal, setAddModal] = useState(false);
-    const [updateModal, setUpdateModal] = useState(false);
-    const [deleteModal, setDeleteModal] = useState(false);
     const [inputTitleValue, setInputTitleValue] = useState("");
     const [inputAuthorValue, setInputAuthorValue] = useState("");
     const [inputGenreValue, setInputGenreValue] = useState("");
     const [added, setAdded] = useState(false);
+
+    const [addModal, setAddModal] = useState(false);
+    const [updateModal, setUpdateModal] = useState(false);
+    const [deleteModal, setDeleteModal] = useState(false);
+    const [editionsModal, setEditionsModal] = useState(false);
 
 
     useEffect(() => {
@@ -94,6 +97,7 @@ const ModBooks = () => {
         setAddModal(false);
         setUpdateModal(false);
         setDeleteModal(false);
+        setEditionsModal(false);
     }
 
     const onAdd = async () => {
@@ -203,7 +207,8 @@ const ModBooks = () => {
                 titleSort={titleSort} authorSort={authorSort}
                 genreSort={genreSort} alphaSorter={alphaSorter}
                 setAddModal={setAddModal} setUpdateModal={setUpdateModal}
-                setDeleteModal={setDeleteModal} setSelectedBookId={SetSelectedBookId}
+                setDeleteModal={setDeleteModal} setEditionsModal={setEditionsModal}
+                setSelectedBookId={SetSelectedBookId}
             />
             {addModal && <AddBookMod closeModal={closeModal} formError={formError}
                                      onAdd={onAdd}
@@ -227,6 +232,10 @@ const ModBooks = () => {
             />}
             {deleteModal && <DeleteBookMod closeModal={closeModal}
                                         selectedBookId={selectedBookId} onDelete={onDelete}
+            />}
+            {editionsModal && <EditionsMod closeModal={closeModal}
+                                        selectedBookId={selectedBookId}
+                                        findBookById={findBookById}
             />}
         </div>
     );

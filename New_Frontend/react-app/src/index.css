@@ -379,6 +379,7 @@ ul, ol {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: space-between;
     gap: 1.5rem;
     padding: 2rem;
 }
@@ -465,4 +466,95 @@ button.delete-btn2:hover {
 .bookRowButtons {
     display: flex;
     gap: 0.3rem;
+}
+
+.edition-btn {
+    background-color: black;
+    color: white;
+    font-weight: bold;
+    padding: 0.5rem 0.7rem;
+    border: 2px solid black;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.edition-btn:hover {
+    text-decoration: underline;
+}
+
+.editionsModal {
+    min-width: 70%;
+    min-height: 70%;
+    max-height: 70%;
+    overflow-y: auto;
+}
+
+.editionsHeader {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.editionsHeader h2 {
+    flex-grow: 1;
+}
+.editionsHeader input {
+    flex-grow: 2;
+    padding: 0.7rem;
+}
+
+.editionsBody {
+    width: 100%;
+}
+
+.editionsTable {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.editionsTableHeader {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr auto;
+    align-items: center;
+    margin: 0.5rem 1rem 0;
+}
+
+.editionsRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr auto;
+    align-items: center;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    padding: 0.8rem;
+}
+
+.editionsTable > div:first-child {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.editionsButtons {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.editionsButtons button {
+    cursor: pointer;
+    background-color: black;
+    color: white;
+    padding: 0.5rem 0.7rem;
+    border: 3px solid black;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.editionsButtons button:hover {
+    background-color: blue;
+    border: 3px solid blue;
 }
