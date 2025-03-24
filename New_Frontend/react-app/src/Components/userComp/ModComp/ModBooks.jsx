@@ -156,7 +156,7 @@ const ModBooks = () => {
             if (!response.ok) {
                 throw new Error('Failed to fetch data');
             }
-
+            setAdded(prevAdded => !prevAdded);
         } catch (err) {
             setError(error.message);
         } finally {
@@ -174,13 +174,21 @@ const ModBooks = () => {
                 }
             });
             if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Failed to delete user');
+                let errorMessage = 'Failed to delete book';
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    const errorData = await response.json();
+                    errorMessage = errorData.message || errorMessage;
+                } else {
+                    errorMessage = await response.text();
+                }
+                console.log(errorMessage);
+                throw new Error(errorMessage);
             }
-            setData(data.filter(book => book.id !== bookId));
+            setAdded(prevAdded => !prevAdded);
         } catch (error) {
             setError(error.message);
-            console.error('Error deleting user:', error);
+            console.error('Error deleting book:', error);
         } finally {
             closeModal();
         }

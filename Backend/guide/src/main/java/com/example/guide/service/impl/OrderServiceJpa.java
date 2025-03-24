@@ -1,18 +1,31 @@
 package com.example.guide.service.impl;
 
-import com.example.guide.domain.Order;
+import com.example.guide.domain.*;
 import com.example.guide.dto.OrderDTO;
-import com.example.guide.repository.OrderRepository;
+import com.example.guide.repository.*;
 import com.example.guide.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class OrderServiceJpa implements OrderService {
     @Autowired
     private OrderRepository orderRepo;
+
+    @Autowired
+    private ReaderRepository readerRepo;
+
+    @Autowired
+    private EditionRepository editionRepo;
+
+    @Autowired
+    private EditionOrderRepository editionOrderRepo;
+
+    @Autowired
+    private OrderReaderRepository orderReaderRepo;
 
     @Override
     public List<Order> listAll() {
@@ -31,7 +44,26 @@ public class OrderServiceJpa implements OrderService {
         order.setStartDate(orderDTO.getStartDate());
         order.setEndDate(orderDTO.getEndDate());
         order.setReturnedDate(orderDTO.getReturnedDate());
-        return orderRepo.save(order);
+        orderRepo.save(order);
+
+        Long readerId = orderDTO.getReaderId();
+        Reader reader = readerRepo.findById(readerId)
+                .orElseThrow(() -> new RuntimeException("Reader not found with ID: " + readerId));
+        OrderReader orderReader = new OrderReader();
+        orderReader.setOrder(order);
+        orderReader.setReader(reader);
+        orderReaderRepo.save(orderReader);
+
+        Set<Long> izdanjaIds = orderDTO.getIzdanjaId();
+        for (Long id : izdanjaIds) {
+            Edition edition = editionRepo.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Reader not found with ID: " + id));
+            EditionOrder editionOrder = new EditionOrder();
+            editionOrder.setEdition(edition);
+            editionOrder.setOrder(order);
+            editionOrderRepo.save(editionOrder);
+        }
+        return order;
     }
 
     @Override
@@ -48,6 +80,14 @@ public class OrderServiceJpa implements OrderService {
     public void deleteOrder(Long orderId) {
         Order order = orderRepo.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Book not found with ID: " + orderId));
+        List<EditionOrder> editionOrders = editionOrderRepo.findAllByOrder(order);
+        if (!editionOrders.isEmpty()) {
+            editionOrderRepo.deleteAll(editionOrders);
+        }
+        OrderReader orderReader = orderReaderRepo.findByOrder(order);
+        if (orderReader != null) {
+            orderReaderRepo.delete(orderReader);
+        }
         orderRepo.delete(order);
     }
 }

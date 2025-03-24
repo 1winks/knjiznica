@@ -2,13 +2,13 @@ import React from 'react';
 import EditionsRow from "./EditionsRow";
 
 const EditionsTable = ({ editions, setSelectedEditionId,
-                           setAddModal, setUpdateModal, setDeleteModal }) => {
+                           setAddModal, setUpdateModal, setDeleteModal, availabilitySort, sortByAvailability }) => {
     return (
         <div className="editionsTable">
             <div>
                 <div className="bookSorters">
-                    <button className="sortButton" onClick={() => console.log("sort")}>
-                        Sort By Availability {true ? "▲" : "▼"}
+                    <button className="sortButton" onClick={() => sortByAvailability()}>
+                        Sort By Availability {availabilitySort ? "▲" : "▼"}
                     </button>
                 </div>
                 <button className="adder" onClick={() => setAddModal(true)}>

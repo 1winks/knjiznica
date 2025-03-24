@@ -1,11 +1,15 @@
 package com.example.guide.service.impl;
 
+import com.example.guide.controller.responses.BookDeletionException;
+import com.example.guide.controller.responses.EditionDeletionException;
 import com.example.guide.domain.Book;
 import com.example.guide.domain.BookEdition;
 import com.example.guide.domain.Edition;
+import com.example.guide.domain.EditionOrder;
 import com.example.guide.dto.EditionDTO;
 import com.example.guide.repository.BookEditionRepository;
 import com.example.guide.repository.BookRepository;
+import com.example.guide.repository.EditionOrderRepository;
 import com.example.guide.repository.EditionRepository;
 import com.example.guide.service.EditionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +29,9 @@ public class EditionServiceJpa implements EditionService {
 
     @Autowired
     private BookEditionRepository bookEditionRepo;
+
+    @Autowired
+    private EditionOrderRepository editionOrderRepo;
 
     @Override
     public List<Edition> listAll() {
@@ -74,6 +81,14 @@ public class EditionServiceJpa implements EditionService {
     public void deleteEdition(Long editionId) {
         Edition edition = editionRepo.findById(editionId)
                 .orElseThrow(() -> new RuntimeException("Edition not found with ID: " + editionId));
+        List<EditionOrder> editionOrders = editionOrderRepo.findAllByEdition(edition);
+        if (!editionOrders.isEmpty()) {
+            throw new EditionDeletionException("Cant delete ordered editions!");
+        }
+        BookEdition bookEdition = bookEditionRepo.findByEdition(edition);
+        if (bookEdition != null) {
+            bookEditionRepo.delete(bookEdition);
+        }
         editionRepo.delete(edition);
     }
 }
