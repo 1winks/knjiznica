@@ -17,7 +17,7 @@ const ReaderTable = ({ readers, sortNames, nameSort, sortEmails, emailSort, onUp
                 <div>Email:</div>
                 <div>Address:</div>
                 <div>Phone-number:</div>
-                <div className="updateDiv">update:</div>
+                <div>Actions:</div>
             </div>
             {readers.map(reader => (
                 <ReaderRow key={reader.readerId} {...reader}

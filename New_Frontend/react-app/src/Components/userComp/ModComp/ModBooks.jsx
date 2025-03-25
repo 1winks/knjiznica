@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import BookTable from "./BookTable";
+import BookTable from "./Tables/BookTable";
 import {getJwt} from "../../../Utils/userData";
 import AddBookMod from "./Modals/AddBookMod";
 import DeleteBookMod from "./Modals/DeleteBookMod";
 import UpdateBookMod from "./Modals/UpdateBookMod";
-import EditionsMod from "./Modals/Editions/EditionsMod";
+import EditionsMod from "./Modals/BookEditions/EditionsMod";
 
 const ModBooks = () => {
     const [data, setData] = useState([]);

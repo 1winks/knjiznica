@@ -15,7 +15,7 @@ const UserTable = ({ users, onDelete, sortRoles, sortNames, roleSort, nameSort, 
             <div className="adminTableHeader">
                 <div>Username:</div>
                 <div>Role:</div>
-                <div className="deleteDiv">Delete:</div>
+                <div>Actions:</div>
             </div>
             {users.map(user => (
                 <UserRow key={user.id} {...user}

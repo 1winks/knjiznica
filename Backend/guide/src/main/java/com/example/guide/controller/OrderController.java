@@ -3,6 +3,7 @@ import com.example.guide.domain.Book;
 import com.example.guide.domain.Order;
 import com.example.guide.dto.BookDTO;
 import com.example.guide.dto.OrderDTO;
+import com.example.guide.dto.OrderDTO2;
 import com.example.guide.service.BookService;
 import com.example.guide.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class OrderController {
 
     @GetMapping("")
     @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
-    public List<Order> listOrder(){
+    public List<OrderDTO2> listOrder(){
         return orderService.listAll();
     }
 

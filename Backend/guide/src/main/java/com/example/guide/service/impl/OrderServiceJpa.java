@@ -2,11 +2,14 @@ package com.example.guide.service.impl;
 
 import com.example.guide.domain.*;
 import com.example.guide.dto.OrderDTO;
+import com.example.guide.dto.OrderDTO2;
 import com.example.guide.repository.*;
 import com.example.guide.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -28,8 +31,31 @@ public class OrderServiceJpa implements OrderService {
     private OrderReaderRepository orderReaderRepo;
 
     @Override
-    public List<Order> listAll() {
-        return orderRepo.findAll();
+    public List<OrderDTO2> listAll() {
+        List<Order> orders = orderRepo.findAll();
+        List<OrderDTO2> orderDTOs = new ArrayList<>();
+        for (Order order : orders) {
+            OrderDTO2 orderDTO = new OrderDTO2();
+            orderDTO.setStartDate(order.getStartDate());
+            orderDTO.setEndDate(order.getEndDate());
+            orderDTO.setReturnedDate(order.getReturnedDate());
+            orderDTO.setOrderId(order.getId());
+
+            OrderReader orderReader = orderReaderRepo.findByOrder(order);
+            Reader reader = orderReader.getReader();
+            orderDTO.setReaderId(reader.getId());
+            orderDTO.setUsername(reader.getUser().getUsername());
+
+            Set<Long> editionsIds = new HashSet<>();
+            List<EditionOrder> editionOrders = editionOrderRepo.findAllByOrder(order);
+            for (EditionOrder editionOrder : editionOrders) {
+                editionsIds.add(editionOrder.getEdition().getId());
+            }
+            orderDTO.setIzdanjaId(editionsIds);
+
+            orderDTOs.add(orderDTO);
+        }
+        return orderDTOs;
     }
 
     @Override
@@ -62,6 +88,11 @@ public class OrderServiceJpa implements OrderService {
             editionOrder.setEdition(edition);
             editionOrder.setOrder(order);
             editionOrderRepo.save(editionOrder);
+
+            edition.setAvailable(false);
+            edition.setBorrowDate(orderDTO.getStartDate());
+            edition.setReturnDate(orderDTO.getEndDate());
+            editionRepo.save(edition);
         }
         return order;
     }

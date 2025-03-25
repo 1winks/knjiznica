@@ -1,13 +1,17 @@
 import React from 'react';
+import { Check, X } from "lucide-react";
 
 const EditionsRow = ({ id, isbn, available, borrowDate, returnDate,
                          setSelectedEditionId, setUpdateModal, setDeleteModal }) => {
     return (
         <div className="editionsRow">
             <div>{isbn}</div>
-            <div>{available ? "Yes" : "No"}</div>
-            <div>{borrowDate ? borrowDate : "X"}</div>
-            <div>{returnDate ? returnDate : "X"}</div>
+            <div>
+                {available ? (<Check className="w-5 h-5 text-green-500"/>)
+                : (<X className="w-5 h-5 text-red-500"/>)}
+            </div>
+            <div>{borrowDate ? borrowDate : (<X className="w-5 h-5 text-red-500"/>)}</div>
+            <div>{returnDate ? returnDate : (<X className="w-5 h-5 text-red-500"/>)}</div>
             <div className="bookRowButtons">
                 <button className="update-btn" onClick={() => {
                     setSelectedEditionId(id);

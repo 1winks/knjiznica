@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {getJwt} from "../../../Utils/userData";
-import ReaderTable from "./ReaderTable";
+import ReaderTable from "./Tables/ReaderTable";
 
 const ModReaders = () => {
     const [data, setData] = useState([]);

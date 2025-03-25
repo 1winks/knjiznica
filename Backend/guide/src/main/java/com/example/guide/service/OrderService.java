@@ -2,11 +2,12 @@ package com.example.guide.service;
 
 import com.example.guide.domain.Order;
 import com.example.guide.dto.OrderDTO;
+import com.example.guide.dto.OrderDTO2;
 
 import java.util.List;
 
 public interface OrderService {
-    List<Order> listAll();
+    List<OrderDTO2> listAll();
 
     Order getOrderById(Long orderId);
 

@@ -2,12 +2,14 @@ package com.example.guide.controller;
 
 import com.example.guide.domain.Edition;
 import com.example.guide.dto.EditionDTO;
+import com.example.guide.dto.EditionDTO2;
 import com.example.guide.service.EditionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @CrossOrigin
@@ -20,6 +22,12 @@ public class EditionController {
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public List<Edition> listEditions(){
         return editionService.listAll();
+    }
+
+    @GetMapping("/editionsByIds")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public List<EditionDTO2> listEditionsByIds(@RequestBody Set<Long> ids){
+        return editionService.listByIds(ids);
     }
 
     @GetMapping("/{editionId}")

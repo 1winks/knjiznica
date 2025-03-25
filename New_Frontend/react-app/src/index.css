@@ -270,26 +270,32 @@ ul, ol {
     padding: 0.7rem;
 }
 
-.adminTableHeader {
-    display: grid;
-    grid-template-columns: 1fr 1fr auto;
-    align-items: center;
-    margin: 0.5rem 1rem 0;
-}
-
 .user-table {
-    display: flex;
-    flex-direction: column;
     margin: 0 1rem;
 }
 
-.user-row {
+.user-table > div:first-child {
+    display: flex;
+}
+
+.adminTableHeader, .user-row {
     display: grid;
     grid-template-columns: 1fr 1fr auto;
     align-items: center;
-    border: 2px solid #ddd;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.adminTableHeader {
+    font-weight: bold;
+    border-bottom: 2px solid #000;
+    padding-bottom: 0.5rem;
+}
+
+.user-row {
+    border: 1px solid #ddd;
     border-radius: 5px;
-    padding: 0.4rem;
+    padding: 0.8rem;
 }
 
 .delete-btn {
@@ -320,30 +326,33 @@ ul, ol {
     height: 100%;
 }
 
-.readerTableHeader {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr auto;
-    align-items: center;
-    margin: 0.5rem 1rem 0;
-}
-
-.updateDiv, .deleteDiv {
-    color: white;
-}
-
 .readerTable {
-    display: flex;
-    flex-direction: column;
     margin: 0 1rem;
 }
 
-.readerRow {
+.readerTable > div:first-child {
+    display: flex;
+    justify-content: space-between;
+}
+
+.readerTableHeader, .readerRow {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr auto;
     align-items: center;
-    border: 2px solid #ddd;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.readerTableHeader {
+    font-weight: bold;
+    border-bottom: 2px solid #000;
+    padding-bottom: 0.5rem;
+}
+
+.readerRow {
+    border: 1px solid #ddd;
     border-radius: 5px;
-    padding: 0.6rem;
+    padding: 0.8rem;
 }
 
 .update-btn {
@@ -420,31 +429,38 @@ button.delete-btn2:hover {
     height: 100%;
 }
 
-.bookTableHeader {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr auto;
-    align-items: center;
-    margin: 0.5rem 1rem 0;
-}
-
 .bookTable {
-    display: flex;
-    flex-direction: column;
     margin: 0 1rem;
 }
 
-.bookRow {
+.bookTable > div:first-child {
+    display: flex;
+    justify-content: space-between;
+}
+
+.bookTableHeader, .bookRow {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr auto;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     align-items: center;
-    border: 2px solid #ddd;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.bookTableHeader {
+    font-weight: bold;
+    border-bottom: 2px solid #000;
+    padding-bottom: 0.5rem;
+}
+
+.bookRow {
+    border: 1px solid #ddd;
     border-radius: 5px;
     padding: 0.8rem;
 }
 
-.bookTable > div {
+.bookRowButtons {
     display: flex;
-    justify-content: space-between;
+    gap: 0.3rem;
 }
 
 .adder {
@@ -462,11 +478,6 @@ button.delete-btn2:hover {
 .adder:hover {
     background-color: black;
     color: white;
-}
-
-.bookRowButtons {
-    display: flex;
-    gap: 0.3rem;
 }
 
 .edition-btn {
@@ -515,27 +526,31 @@ button.delete-btn2:hover {
     flex-direction: column;
 }
 
-.editionsTableHeader {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr auto;
-    align-items: center;
-    margin: 0.5rem 1rem 0;
-}
-
-.editionsRow {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr auto;
-    align-items: center;
-    border: 2px solid #ddd;
-    border-radius: 5px;
-    padding: 0.8rem;
-}
+/* komentar */
 
 .editionsTable > div:first-child {
     display: flex;
     justify-content: space-between;
+}
+
+.editionsTableHeader, .editionsRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     align-items: center;
-    margin-bottom: 1rem;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.editionsTableHeader {
+    font-weight: bold;
+    border-bottom: 2px solid #000;
+    padding-bottom: 0.5rem;
+}
+
+.editionsRow {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 0.8rem;
 }
 
 .editionsButtons {
@@ -558,4 +573,42 @@ button.delete-btn2:hover {
 .editionsButtons button:hover {
     background-color: blue;
     border: 3px solid blue;
+}
+
+.modOrders {
+    height: 100%;
+}
+
+.orderTable {
+    margin: 0 1rem;
+}
+
+.orderTable > div:first-child {
+    display: flex;
+    justify-content: space-between;
+}
+
+.orderTableHeader, .orderRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.orderTableHeader {
+    font-weight: bold;
+    border-bottom: 2px solid #000;
+    padding-bottom: 0.5rem;
+}
+
+.orderRow {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 0.8rem;
+}
+
+.orderRowButtons {
+    display: flex;
+    gap: 0.4rem;
 }

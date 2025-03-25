@@ -25,7 +25,7 @@ const BookTable = ({ books, titleSort, authorSort, genreSort, alphaSorter,
                 <div>Title:</div>
                 <div>Author:</div>
                 <div>Genre:</div>
-                <div className="updateDiv">update:</div>
+                <div>Actions:</div>
             </div>
             {books.map(book => (
                 <BookRow key={book.id} {...book} setUpdateModal={setUpdateModal}

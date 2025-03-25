@@ -20,7 +20,7 @@ const EditionsTable = ({ editions, setSelectedEditionId,
                 <div>Available:</div>
                 <div>BorrowDate:</div>
                 <div>ReturnDate:</div>
-                <div className="updateDiv">update:</div>
+                <div>Actions:</div>
             </div>
             {editions.map(edition => (
                 <EditionsRow key={edition.id} {...edition}
