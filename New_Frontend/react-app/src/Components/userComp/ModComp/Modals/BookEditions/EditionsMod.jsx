@@ -19,7 +19,7 @@ const EditionsMod = ({ closeModal, findBookById, selectedBookId }) => {
     const [selectedEditionId, setSelectedEditionId] = useState(0);
     const [formError, setFormError] = useState("");
     const [inputISBNValue, setInputISBNValue] = useState("");
-    const [yesNo, setYesNo] = useState(null);
+    const [yesNo, setYesNo] = useState("yes");
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
 
@@ -67,12 +67,15 @@ const EditionsMod = ({ closeModal, findBookById, selectedBookId }) => {
         setInputISBNValue('');
         setStartDate("");
         setEndDate("");
-        setYesNo("");
+        setYesNo("yes");
     }
 
     const onAdd = async () => {
         if (inputISBNValue.trim() === "") {
             setFormError("Input cannot be empty!");
+            return;
+        } else if(inputISBNValue.trim().length!==13) {
+            setFormError("ISBN must be 13 digits long!");
             return;
         } else {
             setFormError("");
@@ -113,11 +116,15 @@ const EditionsMod = ({ closeModal, findBookById, selectedBookId }) => {
             bookId: selectedBookId,
             isbn: findEditionById().isbn,
             available: yesNo === "yes",
-            borrowDate: startDate,
-            returnDate: endDate
+            borrowDate: startDate === "" ? null : startDate,
+            returnDate: endDate === "" ? null : endDate
         };
-        if (setYesNo==="" || startDate==="" || endDate==="") {
-            setFormError("Input cannot be empty!");
+        if (setYesNo==="") {
+            setFormError("Availability cannot be empty!");
+            return;
+        }
+        if((startDate==="" && endDate!=="") || (startDate!=="" && endDate==="")) {
+            setFormError("Need to specify both dates");
             return;
         } else {
             setFormError("");
@@ -195,7 +202,7 @@ const EditionsMod = ({ closeModal, findBookById, selectedBookId }) => {
         <div className="modal">
             <div className="modal-content editionsModal">
                 <div className="editionsHeader">
-                    <h2>Editions for book {book.title}:</h2>
+                    <h2>Editions for book "{book.title}":</h2>
                     <input
                         type="text"
                         placeholder="Search by isbn"

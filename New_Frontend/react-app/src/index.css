@@ -526,8 +526,6 @@ button.delete-btn2:hover {
     flex-direction: column;
 }
 
-/* komentar */
-
 .editionsTable > div:first-child {
     display: flex;
     justify-content: space-between;
@@ -611,4 +609,35 @@ button.delete-btn2:hover {
 .orderRowButtons {
     display: flex;
     gap: 0.4rem;
+}
+
+.editionsOrderTable {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.editionsOrderTable > div:first-child {
+    display: flex;
+    justify-content: space-between;
+}
+
+.editionsOrderTableHeader, .editionsOrderRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.editionsOrderTableHeader {
+    font-weight: bold;
+    border-bottom: 2px solid #000;
+    padding-bottom: 0.5rem;
+}
+
+.editionsOrderRow {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 0.8rem;
 }

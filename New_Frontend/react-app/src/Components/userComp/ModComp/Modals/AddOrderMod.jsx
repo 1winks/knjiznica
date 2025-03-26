@@ -1,11 +1,11 @@
 import React from 'react';
 
-const EditionsRow = () => {
+const AddOrderMod = () => {
     return (
         <div>
-            editions row
+            AddOrderMod
         </div>
     );
 };
 
-export default EditionsRow;
+export default AddOrderMod;

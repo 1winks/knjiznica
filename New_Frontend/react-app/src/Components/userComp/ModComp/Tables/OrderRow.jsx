@@ -2,7 +2,7 @@ import React from 'react';
 import { Check, X } from "lucide-react";
 
 const OrderRow = ({ orderId, readerId, username, startDate, endDate, returnedDate, izdanjaId,
-                  setSelectedOrderId, getEditions}) => {
+                  setSelectedOrderId, setEditionsModal, setUpdateModal, setDeleteModal}) => {
     return (
         <div className="orderRow">
             <div>{username}</div>
@@ -16,17 +16,19 @@ const OrderRow = ({ orderId, readerId, username, startDate, endDate, returnedDat
             <div className="orderRowButtons">
                 <button className="edition-btn" onClick={() => {
                     setSelectedOrderId(orderId);
-                    getEditions();
+                    setEditionsModal(true);
                 }}>
                     View
                 </button>
                 <button className="update-btn" onClick={(   ) => {
-                    console.log("update");
+                    setSelectedOrderId(orderId);
+                    setUpdateModal(true);
                 }}>
                     Update
                 </button>
                 <button className="delete-btn" onClick={() => {
-                    console.log("delete");
+                    setSelectedOrderId(orderId);
+                    setDeleteModal(true);
                 }}>
                     Delete
                 </button>

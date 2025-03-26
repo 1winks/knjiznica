@@ -24,7 +24,7 @@ public class EditionController {
         return editionService.listAll();
     }
 
-    @GetMapping("/editionsByIds")
+    @PostMapping("/editionsByIds")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public List<EditionDTO2> listEditionsByIds(@RequestBody Set<Long> ids){
         return editionService.listByIds(ids);

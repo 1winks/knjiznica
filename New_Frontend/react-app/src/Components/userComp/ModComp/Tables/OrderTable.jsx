@@ -1,7 +1,8 @@
 import React from 'react';
 import OrderRow from "./OrderRow";
 
-const OrderTable = ({ orders, setSelectedOrderId, getEditions }) => {
+const OrderTable = ({ orders, setSelectedOrderId,
+                        setEditionsModal, setAddModal, setUpdateModal, setDeleteModal }) => {
     return (
         <div className="orderTable">
             <div>
@@ -12,8 +13,11 @@ const OrderTable = ({ orders, setSelectedOrderId, getEditions }) => {
                     <button className="sortButton" onClick={() => console.log("activity sort")}>
                         Sort By Activity {true ? "▲" : "▼"}
                     </button>
+                    <button className="sortButton" onClick={() => console.log("date sort")}>
+                        Sort By Date Ordered {true ? "▲" : "▼"}
+                    </button>
                 </div>
-                <button className="adder" onClick={() => console.log("add")}>
+                <button className="adder" onClick={() => setAddModal(true)}>
                     Add
                 </button>
             </div>
@@ -26,7 +30,10 @@ const OrderTable = ({ orders, setSelectedOrderId, getEditions }) => {
             </div>
             {orders.map(order => (
                 <OrderRow key={order.orderId} {...order}
-                          setSelectedOrderId={setSelectedOrderId} getEditions={getEditions}
+                          setSelectedOrderId={setSelectedOrderId}
+                          setEditionsModal={setEditionsModal}
+                          setUpdateModal={setUpdateModal}
+                          setDeleteModal={setDeleteModal}
                 />
             ))}
         </div>

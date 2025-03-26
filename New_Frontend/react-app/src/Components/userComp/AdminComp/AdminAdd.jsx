@@ -33,6 +33,10 @@ const AdminAdd = () => {
             setErrorMessage('Please fill in all fields.');
             return;
         }
+        if (password.length<6 || password.length>40) {
+            setErrorMessage('Password size must be between 6 and 40');
+            return;
+        }
 
         setErrorMessage('');
         const userData = {
