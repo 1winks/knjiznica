@@ -4,6 +4,7 @@ import com.example.guide.domain.Order;
 import com.example.guide.dto.BookDTO;
 import com.example.guide.dto.OrderDTO;
 import com.example.guide.dto.OrderDTO2;
+import com.example.guide.dto.OrderDTO3;
 import com.example.guide.service.BookService;
 import com.example.guide.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class OrderController {
         return orderService.listAll();
     }
 
-    @GetMapping("/{bookId}")
+    @GetMapping("/{orderId}")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public Order findOrder(@PathVariable Long orderId){
         return orderService.getOrderById(orderId);
@@ -33,7 +34,7 @@ public class OrderController {
 
     @PostMapping("/add")
     @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
-    public Order createOrder(@RequestBody OrderDTO orderDTO) {
+    public Order createOrder(@RequestBody OrderDTO3 orderDTO) {
         return orderService.createOrder(orderDTO);
     }
 

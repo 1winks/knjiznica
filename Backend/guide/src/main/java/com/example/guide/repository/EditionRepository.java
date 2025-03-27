@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface EditionRepository extends JpaRepository<Edition, Long> {
     Edition findEditionByIsbn(Long isbn);
-    List<Edition> findEditionsByAvailable(Boolean available);
+    List<Edition> findEditionsByAvailableTrue();
 
     @Query("SELECT e FROM Edition e WHERE e.returnDate IS NULL OR e.returnDate < :date")
     List<Edition> findEditionsAvailableAfterDate(@Param("date") LocalDate date);

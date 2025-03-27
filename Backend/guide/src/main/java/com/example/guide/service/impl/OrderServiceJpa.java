@@ -1,17 +1,17 @@
 package com.example.guide.service.impl;
 
+import com.example.guide.authentication.models.User;
+import com.example.guide.authentication.repository.UserRepository;
 import com.example.guide.domain.*;
 import com.example.guide.dto.OrderDTO;
 import com.example.guide.dto.OrderDTO2;
+import com.example.guide.dto.OrderDTO3;
 import com.example.guide.repository.*;
 import com.example.guide.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class OrderServiceJpa implements OrderService {
@@ -20,6 +20,9 @@ public class OrderServiceJpa implements OrderService {
 
     @Autowired
     private ReaderRepository readerRepo;
+
+    @Autowired
+    private UserRepository userRepo;
 
     @Autowired
     private EditionRepository editionRepo;
@@ -65,16 +68,17 @@ public class OrderServiceJpa implements OrderService {
     }
 
     @Override
-    public Order createOrder(OrderDTO orderDTO) {
+    public Order createOrder(OrderDTO3 orderDTO) {
         Order order = new Order();
         order.setStartDate(orderDTO.getStartDate());
         order.setEndDate(orderDTO.getEndDate());
         order.setReturnedDate(orderDTO.getReturnedDate());
         orderRepo.save(order);
 
-        Long readerId = orderDTO.getReaderId();
-        Reader reader = readerRepo.findById(readerId)
-                .orElseThrow(() -> new RuntimeException("Reader not found with ID: " + readerId));
+        String username = orderDTO.getUsername();
+        Optional<User> user = Optional.ofNullable(userRepo.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found with username: " + username)));
+        Reader reader = readerRepo.findReaderByUserId(user.get().getId());
         OrderReader orderReader = new OrderReader();
         orderReader.setOrder(order);
         orderReader.setReader(reader);
@@ -101,8 +105,6 @@ public class OrderServiceJpa implements OrderService {
     public Order updateOrder(Long orderId, OrderDTO orderDTO) {
         Order order = orderRepo.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Book not found with ID: " + orderId));
-        order.setStartDate(orderDTO.getStartDate());
-        order.setEndDate(orderDTO.getEndDate());
         order.setReturnedDate(orderDTO.getReturnedDate());
         return orderRepo.save(order);
     }

@@ -14,11 +14,13 @@ const ModOrders = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredUsers, setFilteredUsers] = useState([]);
     const [userSort, setUserSort] = useState(true);
-    const [activitySort, setActivitySort] = useState(true);
+    const [activitySort, setActivitySort] = useState(false);
+    const [dateSort, setDateSort] = useState(true);
     const [added, setAdded] = useState(false);
 
     const [selectedOrderId, SetSelectedOrderId] = useState(0);
     const [formError, setFormError] = useState("");
+    const [returnDate, setReturnDate] = useState("");
 
     const [editionsModal, setEditionsModal] = useState(false);
     const [addModal, setAddModal] = useState(false);
@@ -49,14 +51,75 @@ const ModOrders = () => {
         fetchData();
     }, [added]);
 
+    useEffect(() => {
+        const normalizedSearch = searchTerm.trim().toLowerCase();
+        const filtered = data.filter((order) => {
+            return (
+                order.username.toLowerCase().includes(normalizedSearch) ||
+                order.startDate.includes(normalizedSearch) ||
+                order.endDate.includes(normalizedSearch) ||
+                (order.returnedDate && order.returnedDate.includes(normalizedSearch))
+            );
+        });
+        setFilteredUsers(filtered);
+    }, [searchTerm, data]);
+
     const onAdd = () => {
         console.log("dodavanje");
         // http://localhost:8080/api/resources/orders/add
     }
 
-    const onUpdate = () => {
-        console.log("updateanje");
-        // http://localhost:8080/api/resources/orders/update/{orderId}
+    const onUpdate = async (orderId) => {
+        const order = findOrderById(orderId);
+        const today = new Date().toISOString().split("T")[0];
+        if (returnDate === "") {
+            setFormError("Date input can't be empty!");
+            return;
+        }
+        if (returnDate < order.startDate) {
+            setFormError("Must be a date after start and until today!");
+            return;
+        }
+        if (returnDate > today) {
+            setFormError("Must be a date after start and until today!");
+            return;
+        }
+        setFormError("");
+        const requestBody = {
+            "readerId":order.readerId,
+            "startDate":order.startDate,
+            "endDate":order.endDate,
+            "returnedDate":returnDate,
+            "izdanjaId":order.izdanjaId
+        }
+        try {
+            const response = await fetch(`http://localhost:8080/api/resources/orders/update/${orderId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getJwt()}`,
+                },
+                body: JSON.stringify(requestBody)
+            });
+            if (!response.ok) {
+                let errorMessage = 'Failed to update order';
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    const errorData = await response.json();
+                    errorMessage = errorData.message || errorMessage;
+                } else {
+                    errorMessage = await response.text();
+                }
+                console.log(errorMessage);
+                throw new Error(errorMessage);
+            }
+            setAdded(prevAdded => !prevAdded);
+        } catch (error) {
+            setError(error.message);
+            console.error('Error updating order:', error);
+        } finally {
+            closeModal();
+        }
     }
 
     const onDelete = async (orderId) => {
@@ -89,6 +152,43 @@ const ModOrders = () => {
         }
     }
 
+    const sortByUser = () => {
+        setFilteredUsers(prevUsers =>
+            prevUsers.toSorted((a,b) => userSort ?
+                a.username.localeCompare(b.username) : b.username.localeCompare(a.username))
+        );
+        setUserSort(prev => !prev);
+    }
+    const sortByActivity = () => {
+        setFilteredUsers(prevUsers =>
+            prevUsers.toSorted((a,b) => {
+                if (activitySort) {
+                    if (a.returnedDate === null && b.returnedDate !== null) return -1;
+                    if (a.returnedDate !== null && b.returnedDate === null) return 1;
+                } else {
+                    if (a.returnedDate === null && b.returnedDate !== null) return 1;
+                    if (a.returnedDate !== null && b.returnedDate === null) return -1;
+                }
+                return 0;
+            })
+        );
+        setActivitySort(prev => !prev);
+    }
+    const sortByDate = () => {
+        setFilteredUsers(prevUsers =>
+            prevUsers.toSorted((a,b) => {
+                const dateA = new Date(a.startDate);
+                const dateB = new Date(b.startDate);
+                if (dateSort) {
+                    return dateA - dateB;
+                } else {
+                    return dateB - dateA;
+                }
+            })
+        );
+        setDateSort(prev => !prev);
+    }
+
     const findOrderById = () => {
         return data.find((r) => r.orderId === selectedOrderId);
     }
@@ -114,22 +214,30 @@ const ModOrders = () => {
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
             </div>
-            <OrderTable orders={data}
+            <OrderTable orders={filteredUsers}
                         setSelectedOrderId={SetSelectedOrderId}
                         setEditionsModal={setEditionsModal}
                         setAddModal={setAddModal}
                         setUpdateModal={setUpdateModal}
                         setDeleteModal={setDeleteModal}
+                        sortByUser={sortByUser} userSort={userSort}
+                        sortByActivity={sortByActivity} activitySort={activitySort}
+                        sortByDate={sortByDate} dateSort={dateSort}
             />
             {editionsModal && <EditionsOrderMod closeModal={closeModal}
                                             selectedOrderId={selectedOrderId}
                                             findOrderById={findOrderById}
             />}
             {addModal && <AddOrderMod closeModal={closeModal}
-
+                                            onAdd={onAdd}
             />}
             {updateModal && <UpdateOrderMod closeModal={closeModal}
-
+                                            selectedOrderId={selectedOrderId}
+                                            onUpdate={onUpdate}
+                                            returnDate={returnDate}
+                                            setReturnDate={setReturnDate}
+                                            findOrderById={findOrderById}
+                                            formError={formError}
             />}
             {deleteModal && <DeleteOrderMod closeModal={closeModal}
                                             selectedOrderId={selectedOrderId}

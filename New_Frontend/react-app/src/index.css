@@ -474,10 +474,19 @@ button.delete-btn2:hover {
     cursor: pointer;
     background-color: white;
 }
-
 .adder:hover {
     background-color: black;
     color: white;
+}
+.adder.disabled {
+    background-color: ghostwhite;
+    color: darkgray;
+    border: 3px solid gray;
+    cursor: not-allowed;
+}
+.adder.disabled:hover {
+    background-color: ghostwhite;
+    color: darkgray;
 }
 
 .edition-btn {
@@ -637,6 +646,37 @@ button.delete-btn2:hover {
 }
 
 .editionsOrderRow {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 0.8rem;
+}
+
+.editionsAvailableTable {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.editionsAvailableTable > div:first-child {
+    display: flex;
+    justify-content: space-between;
+}
+
+.editionsAvailableTableHeader, .editionsAvailableRow {
+    display: grid;
+    grid-template-columns: 1fr 2fr 2fr 2fr;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.editionsAvailableTableHeader {
+    font-weight: bold;
+    border-bottom: 2px solid #000;
+    padding-bottom: 0.5rem;
+}
+
+.editionsAvailableRow {
     border: 1px solid #ddd;
     border-radius: 5px;
     padding: 0.8rem;

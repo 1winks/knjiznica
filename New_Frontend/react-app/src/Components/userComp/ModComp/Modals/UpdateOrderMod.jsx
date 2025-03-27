@@ -1,9 +1,36 @@
 import React from 'react';
+import { X } from "lucide-react";
 
-const UpdateOrderMod = () => {
+
+const UpdateOrderMod = ({ closeModal, selectedOrderId, onUpdate, returnDate, setReturnDate,
+                            findOrderById, formError }) => {
+    const orderReturnDate = findOrderById(selectedOrderId).returnedDate;
+
     return (
-        <div>
-            UpdateOrderMod
+        <div className="updateBookMod modal">
+            <div className="modal-content">
+                <h2>Update Order:</h2>
+                {formError && <div style={{color: "red"}}>{formError}</div>}
+                <label>
+                    Current return date:
+                </label>
+                <label>
+                    {orderReturnDate ? orderReturnDate :
+                        (<X className="w-5 h-5 text-red-500"/>)}
+                </label>
+                <div className="labels">
+                    <label>New return date:</label>
+                    <input
+                        type="date"
+                        value={returnDate}
+                        onChange={(e) => setReturnDate(e.target.value)}
+                    />
+                </div>
+                <div className="modal-buttons">
+                    <button onClick={() => onUpdate(selectedOrderId)}>Save</button>
+                    <button onClick={closeModal}>Close</button>
+                </div>
+            </div>
         </div>
     );
 };

@@ -24,6 +24,12 @@ public class EditionController {
         return editionService.listAll();
     }
 
+    @GetMapping("available")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public List<EditionDTO2> listAvailableEditions(){
+        return editionService.listAllAvailable();
+    }
+
     @PostMapping("/editionsByIds")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public List<EditionDTO2> listEditionsByIds(@RequestBody Set<Long> ids){

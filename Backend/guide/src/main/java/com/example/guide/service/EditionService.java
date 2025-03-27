@@ -11,6 +11,8 @@ import java.util.Set;
 public interface EditionService {
     List<Edition> listAll();
 
+    List<EditionDTO2> listAllAvailable();
+
     List<EditionDTO2> listByIds(Set<Long> ids);
 
     Edition createEdition(EditionDTO editionDTO);

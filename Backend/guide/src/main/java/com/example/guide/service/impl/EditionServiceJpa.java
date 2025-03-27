@@ -42,6 +42,22 @@ public class EditionServiceJpa implements EditionService {
     }
 
     @Override
+    public List<EditionDTO2> listAllAvailable() {
+        List<Edition> editions = editionRepo.findEditionsByAvailableTrue();
+        List<EditionDTO2> editionDTOs = new ArrayList<>();
+        for (Edition edition : editions) {
+            EditionDTO2 editionDTO = new EditionDTO2();
+            editionDTO.setEditionId(edition.getId());
+            editionDTO.setIsbn(edition.getIsbn());
+            BookEdition bookEdition = bookEditionRepo.findByEdition(edition);
+            editionDTO.setBookName(bookEdition.getBook().getTitle());
+            editionDTO.setBookAuthor(bookEdition.getBook().getAuthor());
+            editionDTOs.add(editionDTO);
+        }
+        return editionDTOs;
+    }
+
+    @Override
     public List<EditionDTO2> listByIds(Set<Long> ids) {
         List<Edition> editions = editionRepo.findAllById(ids);
         List<EditionDTO2> editionDTOs = new ArrayList<>();

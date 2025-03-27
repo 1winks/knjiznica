@@ -3,13 +3,29 @@ import { Check, X } from "lucide-react";
 
 const OrderRow = ({ orderId, readerId, username, startDate, endDate, returnedDate, izdanjaId,
                   setSelectedOrderId, setEditionsModal, setUpdateModal, setDeleteModal}) => {
+    let daysLateString = "";
+    let daysLate = 0;
+    const today = new Date();
+    const end = new Date(endDate);
+    if (returnedDate) {
+        const returned = new Date(returnedDate);
+        daysLate = Math.floor((returned - end) / (1000 * 60 * 60 * 24));
+    } else {
+        daysLate = Math.floor((today - end) / (1000 * 60 * 60 * 24));
+    }
+    if (daysLate>0) {
+        daysLateString = `(${daysLate} days late)`;
+    }
+
     return (
         <div className="orderRow">
             <div>{username}</div>
             <div>
                 {returnedDate ?
                     (<Check className="w-5 h-5 text-green-500"/>)
-                    : (<X className="w-5 h-5 text-red-500"/>)}
+                    : (<X className="w-5 h-5 text-red-500"/>)
+                }
+                {daysLate > 0 && ` ${daysLateString}`}
             </div>
             <div>{startDate}</div>
             <div>{endDate}</div>

@@ -2,19 +2,20 @@ import React from 'react';
 import OrderRow from "./OrderRow";
 
 const OrderTable = ({ orders, setSelectedOrderId,
-                        setEditionsModal, setAddModal, setUpdateModal, setDeleteModal }) => {
+                        setEditionsModal, setAddModal, setUpdateModal, setDeleteModal,
+                        userSort, sortByUser, activitySort, sortByActivity, dateSort, sortByDate}) => {
     return (
         <div className="orderTable">
             <div>
                 <div className="orderSorters">
-                    <button className="sortButton" onClick={() => console.log("user sort")}>
-                        Sort By User {true ? "▲" : "▼"}
+                    <button className="sortButton" onClick={sortByUser}>
+                        Sort By User {userSort ? "▲" : "▼"}
                     </button>
-                    <button className="sortButton" onClick={() => console.log("activity sort")}>
-                        Sort By Activity {true ? "▲" : "▼"}
+                    <button className="sortButton" onClick={sortByActivity}>
+                        Sort By Activity {activitySort ? "▼" : "▲"}
                     </button>
-                    <button className="sortButton" onClick={() => console.log("date sort")}>
-                        Sort By Date Ordered {true ? "▲" : "▼"}
+                    <button className="sortButton" onClick={sortByDate}>
+                        Sort By Date Ordered {dateSort ? "▲" : "▼"}
                     </button>
                 </div>
                 <button className="adder" onClick={() => setAddModal(true)}>
