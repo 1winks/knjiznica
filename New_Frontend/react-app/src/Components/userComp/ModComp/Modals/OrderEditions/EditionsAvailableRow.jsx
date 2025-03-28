@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
 
-const EditionsAvailableRow = ({ editionId, isbn, bookName, bookAuthor, setNumSelected, setEditionsToAdd }) => {
-    const [isSelected, setIsSelected] = useState(false);
+const EditionsAvailableRow = ({ editionId, isbn, bookName, bookAuthor,
+                                  setNumSelected, setEditionsToAdd, editionsToAdd }) => {
+    const isChecked = editionsToAdd.some(edition => edition.editionId === editionId);
     const editionBody = {
         editionId: editionId,
         isbn: isbn,
@@ -10,7 +11,6 @@ const EditionsAvailableRow = ({ editionId, isbn, bookName, bookAuthor, setNumSel
     }
     const handleCheckboxChange = (event) => {
         const isChecked = event.target.checked;
-        setIsSelected(isChecked);
         setNumSelected(prevCount => isChecked ? prevCount + 1 : prevCount - 1);
         setEditionsToAdd(prevEditions => {
             if (isChecked) {
@@ -26,7 +26,7 @@ const EditionsAvailableRow = ({ editionId, isbn, bookName, bookAuthor, setNumSel
             <div>
                 <input
                     type="checkbox"
-                    checked={isSelected}
+                    checked={isChecked}
                     onChange={handleCheckboxChange}
                 />
             </div>

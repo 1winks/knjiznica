@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {getJwt} from "../../../../Utils/userData";
 import EditionsAvailableTable from "./OrderEditions/EditionsAvailableTable";
 
-const AddOrderMod = ({ closeModal, onAdd }) => {
+const AddOrderMod = ({ closeModal, setAdded }) => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -84,6 +84,9 @@ const AddOrderMod = ({ closeModal, onAdd }) => {
                                             authorSort={authorSort} sortByAuthor={sortByAuthor}
                                             titleSort={titleSort} sortByTitle={sortByTitle}
                                             editionsToAdd={editionsToAdd} setEditionsToAdd={setEditionsToAdd}
+                                            setError={setError}
+                                            setAdded={setAdded}
+                                            closeParentModal={closeModal}
                     />
                 </div>
                 <div className="editionsButtons">

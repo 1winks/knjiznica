@@ -1,13 +1,13 @@
 import React, {useState} from 'react';
 import EditionsAvailableRow from "./EditionsAvailableRow";
+import AddOrderCreateMod from "../AddOrderCreateMod";
 
 
 const EditionsAvailableTable = ({ editions, editionsToAdd, setEditionsToAdd,
-                                    authorSort, sortByAuthor, titleSort, sortByTitle}) => {
+                                    authorSort, sortByAuthor, titleSort, sortByTitle,
+                                    setError, setAdded, closeParentModal }) => {
     const [numSelected, setNumSelected] = useState(0);
-    const handleButtonClick = () => {
-        console.log(editionsToAdd);
-    };
+    const [creatorModal, setCreatorModal] = useState(false);
 
     return (
         <div className="editionsAvailableTable">
@@ -21,7 +21,8 @@ const EditionsAvailableTable = ({ editions, editionsToAdd, setEditionsToAdd,
                     </button>
                 </div>
                 <button className={`adder ${numSelected <= 0 ? 'disabled' : ''}`}
-                        onClick={handleButtonClick} disabled={numSelected<=0}>
+                        onClick={() => setCreatorModal(true)}
+                        disabled={numSelected<=0}>
                     Create Order
                 </button>
             </div>
@@ -35,8 +36,17 @@ const EditionsAvailableTable = ({ editions, editionsToAdd, setEditionsToAdd,
                 <EditionsAvailableRow key={edition.editionId} {...edition}
                                       setNumSelected={setNumSelected}
                                       setEditionsToAdd={setEditionsToAdd}
+                                      editionsToAdd={editionsToAdd}
                 />
             ))}
+            {creatorModal && <AddOrderCreateMod setCreatorModal={setCreatorModal}
+                                                editions={editionsToAdd}
+                                                setError={setError}
+                                                setAdded={setAdded}
+                                                setNumSelected={setNumSelected}
+                                                setEditionsToAdd={setEditionsToAdd}
+                                                closeParentModal={closeParentModal}
+            />}
         </div>
     );
 };

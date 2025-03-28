@@ -3,7 +3,8 @@ import OrderRow from "./OrderRow";
 
 const OrderTable = ({ orders, setSelectedOrderId,
                         setEditionsModal, setAddModal, setUpdateModal, setDeleteModal,
-                        userSort, sortByUser, activitySort, sortByActivity, dateSort, sortByDate}) => {
+                        userSort, sortByUser, activitySort, sortByActivity,
+                        dateSort, sortByDate, filterLate, lateFilter}) => {
     return (
         <div className="orderTable">
             <div>
@@ -16,6 +17,9 @@ const OrderTable = ({ orders, setSelectedOrderId,
                     </button>
                     <button className="sortButton" onClick={sortByDate}>
                         Sort By Date Ordered {dateSort ? "▲" : "▼"}
+                    </button>
+                    <button className="sortButton" onClick={filterLate}>
+                        See {lateFilter ? "All Orders" : "Running Late"}
                     </button>
                 </div>
                 <button className="adder" onClick={() => setAddModal(true)}>

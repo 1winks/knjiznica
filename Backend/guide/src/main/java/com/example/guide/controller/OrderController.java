@@ -40,7 +40,7 @@ public class OrderController {
 
     @PutMapping("/update/{orderId}")
     @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
-    public Order updateOrder(@PathVariable Long orderId, @RequestBody OrderDTO orderDTO) {
+    public Order updateOrder(@PathVariable Long orderId, @RequestBody OrderDTO3 orderDTO) {
         return orderService.updateOrder(orderId, orderDTO);
     }
 

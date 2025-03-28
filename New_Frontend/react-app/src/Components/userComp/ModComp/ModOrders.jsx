@@ -16,6 +16,7 @@ const ModOrders = () => {
     const [userSort, setUserSort] = useState(true);
     const [activitySort, setActivitySort] = useState(false);
     const [dateSort, setDateSort] = useState(true);
+    const [lateFilter, setLateFilter] = useState(false);
     const [added, setAdded] = useState(false);
 
     const [selectedOrderId, SetSelectedOrderId] = useState(0);
@@ -63,11 +64,6 @@ const ModOrders = () => {
         });
         setFilteredUsers(filtered);
     }, [searchTerm, data]);
-
-    const onAdd = () => {
-        console.log("dodavanje");
-        // http://localhost:8080/api/resources/orders/add
-    }
 
     const onUpdate = async (orderId) => {
         const order = findOrderById(orderId);
@@ -189,6 +185,25 @@ const ModOrders = () => {
         setDateSort(prev => !prev);
     }
 
+    const filterLate = () => {
+        const today = new Date();
+        setFilteredUsers(prevFiltered => {
+            if (lateFilter) {
+                return data.filter(order =>
+                    order.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    order.startDate.includes(searchTerm) ||
+                    order.endDate.includes(searchTerm) ||
+                    (order.returnedDate && order.returnedDate.includes(searchTerm))
+                );
+            } else {
+                return prevFiltered.filter(order =>
+                    !order.returnedDate && new Date(order.endDate) < today
+                );
+            }
+        });
+        setLateFilter(prev => !prev);
+    }
+
     const findOrderById = () => {
         return data.find((r) => r.orderId === selectedOrderId);
     }
@@ -223,13 +238,14 @@ const ModOrders = () => {
                         sortByUser={sortByUser} userSort={userSort}
                         sortByActivity={sortByActivity} activitySort={activitySort}
                         sortByDate={sortByDate} dateSort={dateSort}
+                        filterLate={filterLate} lateFilter={lateFilter}
             />
             {editionsModal && <EditionsOrderMod closeModal={closeModal}
                                             selectedOrderId={selectedOrderId}
                                             findOrderById={findOrderById}
             />}
             {addModal && <AddOrderMod closeModal={closeModal}
-                                            onAdd={onAdd}
+                                      setAdded={setAdded}
             />}
             {updateModal && <UpdateOrderMod closeModal={closeModal}
                                             selectedOrderId={selectedOrderId}

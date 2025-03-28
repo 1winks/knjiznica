@@ -73,8 +73,6 @@ public class OrderServiceJpa implements OrderService {
         order.setStartDate(orderDTO.getStartDate());
         order.setEndDate(orderDTO.getEndDate());
         order.setReturnedDate(orderDTO.getReturnedDate());
-        orderRepo.save(order);
-
         String username = orderDTO.getUsername();
         Optional<User> user = Optional.ofNullable(userRepo.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found with username: " + username)));
@@ -82,12 +80,13 @@ public class OrderServiceJpa implements OrderService {
         OrderReader orderReader = new OrderReader();
         orderReader.setOrder(order);
         orderReader.setReader(reader);
+        orderRepo.save(order);
         orderReaderRepo.save(orderReader);
 
         Set<Long> izdanjaIds = orderDTO.getIzdanjaId();
         for (Long id : izdanjaIds) {
             Edition edition = editionRepo.findById(id)
-                    .orElseThrow(() -> new RuntimeException("Reader not found with ID: " + id));
+                    .orElseThrow(() -> new RuntimeException("Edition not found with ID: " + id));
             EditionOrder editionOrder = new EditionOrder();
             editionOrder.setEdition(edition);
             editionOrder.setOrder(order);
@@ -102,9 +101,9 @@ public class OrderServiceJpa implements OrderService {
     }
 
     @Override
-    public Order updateOrder(Long orderId, OrderDTO orderDTO) {
+    public Order updateOrder(Long orderId, OrderDTO3 orderDTO) {
         Order order = orderRepo.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Book not found with ID: " + orderId));
+                .orElseThrow(() -> new RuntimeException("Order not found with ID: " + orderId));
         order.setReturnedDate(orderDTO.getReturnedDate());
         return orderRepo.save(order);
     }
@@ -112,7 +111,7 @@ public class OrderServiceJpa implements OrderService {
     @Override
     public void deleteOrder(Long orderId) {
         Order order = orderRepo.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Book not found with ID: " + orderId));
+                .orElseThrow(() -> new RuntimeException("Order not found with ID: " + orderId));
         List<EditionOrder> editionOrders = editionOrderRepo.findAllByOrder(order);
         if (!editionOrders.isEmpty()) {
             editionOrderRepo.deleteAll(editionOrders);

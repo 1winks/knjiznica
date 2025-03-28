@@ -3,6 +3,7 @@ package com.example.guide.controller;
 import com.example.guide.domain.Book;
 import com.example.guide.domain.Edition;
 import com.example.guide.dto.BookDTO;
+import com.example.guide.dto.BookDTO2;
 import com.example.guide.dto.EditionDTO;
 import com.example.guide.service.BookService;
 import com.example.guide.service.EditionService;
@@ -23,6 +24,12 @@ public class BookController {
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public List<Book> listBooks(){
         return bookService.listAll();
+    }
+
+    @GetMapping("bookeds")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public List<BookDTO2> listBookEditions(){
+        return bookService.listBookEds();
     }
 
     @GetMapping("/{bookId}")
