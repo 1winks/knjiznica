@@ -3,9 +3,7 @@ package com.example.guide.service.impl;
 import com.example.guide.authentication.models.User;
 import com.example.guide.authentication.repository.UserRepository;
 import com.example.guide.domain.*;
-import com.example.guide.dto.OrderDTO;
-import com.example.guide.dto.OrderDTO2;
-import com.example.guide.dto.OrderDTO3;
+import com.example.guide.dto.*;
 import com.example.guide.repository.*;
 import com.example.guide.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +24,9 @@ public class OrderServiceJpa implements OrderService {
 
     @Autowired
     private EditionRepository editionRepo;
+
+    @Autowired
+    private BookEditionRepository bookEditionRepo;
 
     @Autowired
     private EditionOrderRepository editionOrderRepo;
@@ -121,5 +122,39 @@ public class OrderServiceJpa implements OrderService {
             orderReaderRepo.delete(orderReader);
         }
         orderRepo.delete(order);
+    }
+
+    @Override
+    public List<OrderDTO4> listAllUser(UserDTO userDTO) {
+        String username = userDTO.getUsername();
+        System.out.println(username);
+        List<OrderDTO4> userOrders = new ArrayList<>();
+        User user = userRepo.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException(
+                        "User not found with username: " + username));
+        Reader reader = user.getReader();
+        List<OrderReader> readerOrders = orderReaderRepo.findAllByReader(reader);
+        for (OrderReader orderReader : readerOrders) {
+            OrderDTO4 orderDTO4 = new OrderDTO4();
+            Set<BookDTO3> izdanja = new HashSet<>();
+            Order order = orderReader.getOrder();
+            List<EditionOrder> editionOrders = editionOrderRepo.findAllByOrder(order);
+            for (EditionOrder editionOrder : editionOrders) {
+                Edition edition = editionOrder.getEdition();
+                BookEdition bookEdition = bookEditionRepo.findByEdition(edition);
+                Book book = bookEdition.getBook();
+                BookDTO3 bookDTO3 = new BookDTO3();
+                bookDTO3.setTitle(book.getTitle());
+                bookDTO3.setAuthor(book.getAuthor());
+                bookDTO3.setIsbn(edition.getIsbn());
+                izdanja.add(bookDTO3);
+            }
+            orderDTO4.setStartDate(order.getStartDate());
+            orderDTO4.setEndDate(order.getEndDate());
+            orderDTO4.setReturnedDate(order.getReturnedDate());
+            orderDTO4.setIzdanja(izdanja);
+            userOrders.add(orderDTO4);
+        }
+        return userOrders;
     }
 }

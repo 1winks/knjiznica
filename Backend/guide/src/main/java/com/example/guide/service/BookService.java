@@ -3,6 +3,8 @@ package com.example.guide.service;
 import com.example.guide.domain.Book;
 import com.example.guide.dto.BookDTO;
 import com.example.guide.dto.BookDTO2;
+import com.example.guide.dto.BookDTO3;
+import com.example.guide.dto.UserDTO;
 
 import java.util.List;
 
@@ -18,4 +20,6 @@ public interface BookService {
     void deleteBook(Long bookId);
 
     List<BookDTO2> listBookEds();
+
+    List<BookDTO3> listBookUser(UserDTO userDTO);
 }

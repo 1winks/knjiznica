@@ -2,9 +2,7 @@ package com.example.guide.controller;
 
 import com.example.guide.domain.Book;
 import com.example.guide.domain.Edition;
-import com.example.guide.dto.BookDTO;
-import com.example.guide.dto.BookDTO2;
-import com.example.guide.dto.EditionDTO;
+import com.example.guide.dto.*;
 import com.example.guide.service.BookService;
 import com.example.guide.service.EditionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +28,12 @@ public class BookController {
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public List<BookDTO2> listBookEditions(){
         return bookService.listBookEds();
+    }
+
+    @PostMapping("bookuser")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public List<BookDTO3> listBooksUser(@RequestBody UserDTO userDTO){
+        return bookService.listBookUser(userDTO);
     }
 
     @GetMapping("/{bookId}")

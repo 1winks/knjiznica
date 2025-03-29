@@ -1,16 +1,14 @@
 package com.example.guide.service.impl;
 
+import com.example.guide.authentication.models.User;
+import com.example.guide.authentication.repository.UserRepository;
 import com.example.guide.controller.responses.BookDeletionException;
-import com.example.guide.domain.Book;
-import com.example.guide.domain.BookEdition;
-import com.example.guide.domain.Edition;
-import com.example.guide.domain.EditionOrder;
-import com.example.guide.dto.BookDTO;
-import com.example.guide.dto.BookDTO2;
-import com.example.guide.dto.EditionDTO3;
+import com.example.guide.domain.*;
+import com.example.guide.dto.*;
 import com.example.guide.repository.BookEditionRepository;
 import com.example.guide.repository.BookRepository;
 import com.example.guide.repository.EditionOrderRepository;
+import com.example.guide.repository.OrderReaderRepository;
 import com.example.guide.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +25,15 @@ public class BookServiceJpa implements BookService {
 
     @Autowired
     private BookEditionRepository bookEditionRepo;
+
+    @Autowired
+    private UserRepository userRepo;
+
+    @Autowired
+    private OrderReaderRepository orderReaderRepo;
+
+    @Autowired
+    private EditionOrderRepository editionOrderRepo;
 
     @Override
     public List<Book> listAll() {
@@ -100,5 +107,32 @@ public class BookServiceJpa implements BookService {
             bookDTOs.add(bookDTO);
         }
         return bookDTOs;
+    }
+
+    @Override
+    public List<BookDTO3> listBookUser(UserDTO userDTO) {
+        String username = userDTO.getUsername();
+        System.out.println(username);
+        List<BookDTO3> userBooks = new ArrayList<>();
+        User user = userRepo.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException(
+                        "User not found with username: " + username));
+        Reader reader = user.getReader();
+        List<OrderReader> readerOrders = orderReaderRepo.findAllByReader(reader);
+        for (OrderReader orderReader : readerOrders) {
+            Order order = orderReader.getOrder();
+            List<EditionOrder> editionOrders = editionOrderRepo.findAllByOrder(order);
+            for (EditionOrder editionOrder : editionOrders) {
+                Edition edition = editionOrder.getEdition();
+                BookEdition bookEdition = bookEditionRepo.findByEdition(edition);
+                Book book = bookEdition.getBook();
+                BookDTO3 bookDTO3 = new BookDTO3();
+                bookDTO3.setTitle(book.getTitle());
+                bookDTO3.setAuthor(book.getAuthor());
+                bookDTO3.setIsbn(edition.getIsbn());
+                userBooks.add(bookDTO3);
+            }
+        }
+        return userBooks;
     }
 }
