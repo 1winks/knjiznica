@@ -332,7 +332,6 @@ ul, ol {
 
 .readerTable > div:first-child {
     display: flex;
-    justify-content: space-between;
 }
 
 .readerTableHeader, .readerRow {

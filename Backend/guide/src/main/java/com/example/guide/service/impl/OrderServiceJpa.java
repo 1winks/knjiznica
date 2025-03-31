@@ -106,6 +106,14 @@ public class OrderServiceJpa implements OrderService {
         Order order = orderRepo.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found with ID: " + orderId));
         order.setReturnedDate(orderDTO.getReturnedDate());
+        List<EditionOrder> editionOrders = editionOrderRepo.findAllByOrder(order);
+        for (EditionOrder editionOrder : editionOrders) {
+            Edition edition = editionOrder.getEdition();
+            edition.setBorrowDate(null);
+            edition.setReturnDate(null);
+            edition.setAvailable(true);
+            editionRepo.save(edition);
+        }
         return orderRepo.save(order);
     }
 
