@@ -129,6 +129,7 @@ public class BookServiceJpa implements BookService {
                 BookDTO3 bookDTO3 = new BookDTO3();
                 bookDTO3.setTitle(book.getTitle());
                 bookDTO3.setAuthor(book.getAuthor());
+                bookDTO3.setGenre(book.getGenre());
                 bookDTO3.setIsbn(edition.getIsbn());
                 userBooks.add(bookDTO3);
             }

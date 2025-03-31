@@ -12,5 +12,6 @@ import java.time.LocalDate;
 public class BookDTO3 {
     private String title;
     private String author;
+    private String genre;
     private Long isbn;
 }

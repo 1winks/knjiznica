@@ -688,3 +688,100 @@ button.delete-btn2:hover {
     border-radius: 5px;
     padding: 0.8rem;
 }
+
+.userReadTableHeader, .userReadBookRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.userReadTableHeader {
+    font-weight: bold;
+    border-bottom: 2px solid #000;
+    padding-bottom: 0.5rem;
+}
+
+.userReadBookRow {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 0.9rem;
+}
+
+.userAvailableTableHeader, .userAvailableBookRow {
+    display: grid;
+    grid-template-columns: 2fr 2fr 2fr 1fr;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.userAvailableTableHeader {
+    font-weight: bold;
+    border-bottom: 2px solid #000;
+    padding-bottom: 0.5rem;
+}
+
+.userAvailableBookRow {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 0.8rem;
+}
+
+.seeEditions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.seeEditionsLink {
+    cursor: pointer;
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 5px;
+    padding: 0.3rem;
+}
+.seeEditionsLink:hover {
+    color: white;
+    background-color: black;
+}
+
+.userEditionsTableHeader, .userAvailableEditionRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.userEditionsTableHeader {
+    font-weight: bold;
+    border-bottom: 2px solid #000;
+    padding-bottom: 0.5rem;
+}
+
+.userAvailableEditionRow {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 0.8rem;
+}
+
+.userOrderTableHeader, .userOrderRow {
+    display: grid;
+    grid-template-columns: 2fr 2fr 2fr 1fr;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.userOrderTableHeader {
+    font-weight: bold;
+    border-bottom: 2px solid #000;
+    padding-bottom: 0.5rem;
+}
+
+.userOrderRow {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 0.8rem;
+}
