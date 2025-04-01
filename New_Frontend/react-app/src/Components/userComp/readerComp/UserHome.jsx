@@ -33,7 +33,7 @@ const UserHome = () => {
                 </ul>
             </div>
             <div className="adminContent">
-                {view === "home" && <UserHomeComp/>}
+                {view === "home" && <UserHomeComp handleView={handleView}/>}
                 {view === "book" && <UserBooks/>}
                 {view === "mybooks" && <UserReadBooks/>}
                 {view === "order" && <UserOrders/>}

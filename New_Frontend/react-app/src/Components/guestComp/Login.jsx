@@ -56,7 +56,7 @@ const Login = () => {
                         {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                         <form onSubmit={handleSubmit}>
                             <div>
-                                <label htmlFor="username">Username</label>
+                                <label htmlFor="username">Username:</label>
                                 <input
                                     type="username"
                                     id="username"
@@ -67,7 +67,7 @@ const Login = () => {
                                 />
                             </div>
                             <div>
-                                <label htmlFor="password">Password</label>
+                                <label htmlFor="password">Password:</label>
                                 <input
                                     type="password"
                                     id="password"

@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {getJwt} from "../../../Utils/userData";
 import ReaderTable from "./Tables/ReaderTable";
+import ReaderRenewModal from "./Modals/ReaderRenewModal";
 
 const ModReaders = () => {
     const [data, setData] = useState([]);
@@ -13,10 +14,13 @@ const ModReaders = () => {
     const [emailSort, setEmailSort] = useState(true);
 
     const [modal, setModal] = useState(false);
+    const [renewModal, setRenewModal] = useState(false);
     const [formError, setFormError] = useState("");
     const [selectedReaderId, SetSelectedReaderId] = useState(0);
     const [inputAddressValue, setInputAddressValue] = useState("");
     const [inputPhoneValue, setInputPhoneValue] = useState("");
+
+    const [added, setAdded] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -40,7 +44,7 @@ const ModReaders = () => {
             }
         };
         fetchData();
-    }, []);
+    }, [added]);
 
     useEffect(() => {
         const filtered = data.filter((reader) =>
@@ -74,13 +78,7 @@ const ModReaders = () => {
             if (!response.ok) {
                 throw new Error('Failed to fetch data');
             }
-            setData((prevData) =>
-                prevData.map((reader) =>
-                    reader.readerId === readerId ?
-                        { ...reader, address: inputAddressValue, phoneNumber: inputPhoneValue }
-                        : reader
-                )
-            );
+            setAdded(prevState => !prevState);
         } catch (err) {
             setError(error.message);
         } finally {
@@ -106,6 +104,7 @@ const ModReaders = () => {
         setInputAddressValue('');
         setInputPhoneValue('');
         setModal(false);
+        setRenewModal(false);
     }
 
     const findReaderById = () => {
@@ -125,7 +124,9 @@ const ModReaders = () => {
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
             </div>
-            <ReaderTable readers={filteredUsers} onUpdate={() => setModal(true)}
+            <ReaderTable readers={filteredUsers}
+                         onUpdate={() => setModal(true)}
+                         onPay={() => setRenewModal(true)}
                          nameSort={nameSort} sortNames={sortNames}
                          sortEmails={sortEmails} emailSort={emailSort}
                          SetSelectedReaderId={SetSelectedReaderId}
@@ -156,6 +157,11 @@ const ModReaders = () => {
                     </div>
                 </div>
             )}
+            {renewModal && <ReaderRenewModal
+                        closeModal={closeModal}
+                        selectedReaderId={selectedReaderId}
+                        setAdded={setAdded}
+            />}
         </div>
     );
 };

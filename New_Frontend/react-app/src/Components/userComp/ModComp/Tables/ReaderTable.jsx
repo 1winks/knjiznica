@@ -1,7 +1,8 @@
 import React from 'react';
 import ReaderRow from "./ReaderRow";
 
-const ReaderTable = ({ readers, sortNames, nameSort, sortEmails, emailSort, onUpdate, SetSelectedReaderId }) => {
+const ReaderTable = ({ readers, sortNames, nameSort, sortEmails, emailSort,
+                         onUpdate, onPay, SetSelectedReaderId }) => {
     return (
         <div className="readerTable">
             <div>
@@ -17,11 +18,14 @@ const ReaderTable = ({ readers, sortNames, nameSort, sortEmails, emailSort, onUp
                 <div>Email:</div>
                 <div>Address:</div>
                 <div>Phone-number:</div>
+                <div>Membership:</div>
                 <div>Actions:</div>
             </div>
             {readers.map(reader => (
                 <ReaderRow key={reader.readerId} {...reader}
-                           onUpdate={onUpdate} SetSelectedReaderId={SetSelectedReaderId}/>
+                           onUpdate={onUpdate} onPay={onPay}
+                           SetSelectedReaderId={SetSelectedReaderId}
+                />
             ))}
         </div>
     );

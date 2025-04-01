@@ -22,7 +22,7 @@ const AdminHome = () => {
                 </ul>
             </div>
             <div className="adminContent">
-                {view === "home" && <AdminHomeComp/>}
+                {view === "home" && <AdminHomeComp handleView={handleView}/>}
                 {view === "add" && <AdminAdd/>}
                 {view === "view" && <AdminView/>}
             </div>

@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,6 +28,9 @@ public class Reader {
 
     @Column(nullable = true)
     private String phoneNumber;
+
+    @Column(nullable = true)
+    private LocalDate membershipFeeExpiry = null;
 
     @OneToOne
     @JoinColumn(name = "user_id")

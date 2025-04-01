@@ -60,7 +60,7 @@ const Register = () => {
                 {errorMessage && <p style={{color: 'red'}}>{errorMessage}</p>}
                 <form onSubmit={handleSubmit}>
                     <div>
-                        <label htmlFor="username">Username</label>
+                        <label htmlFor="username">Username:</label>
                         <input
                             type="username"
                             id="username"
@@ -71,7 +71,7 @@ const Register = () => {
                         />
                     </div>
                     <div>
-                        <label htmlFor="email">Email</label>
+                        <label htmlFor="email">Email:</label>
                         <input
                             type="email"
                             id="email"
@@ -82,7 +82,7 @@ const Register = () => {
                         />
                     </div>
                     <div>
-                        <label htmlFor="password">Password</label>
+                        <label htmlFor="password">Password:</label>
                         <input
                             type="password"
                             id="password"

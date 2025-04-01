@@ -14,6 +14,7 @@ const UserBooks = () => {
     const [authorSort, setAuthorSort] = useState(true);
     const [genreSort, setGenreSort] = useState(true);
     const [availabilitySort, setAvailabilitySort] = useState(true);
+    const [popularitySort, setPopularitySort] = useState(true);
 
     const [selectedBookTitle, SetSelectedBookTitle] = useState("");
     const [editionsMod, setEditionsMod] = useState(false);
@@ -85,6 +86,13 @@ const UserBooks = () => {
         setAvailabilitySort(prev => !prev);
     }
 
+    const sortByPopularity = () => {
+        setFilteredUsers(prevUsers =>
+            prevUsers.toSorted((a,b) => popularitySort ?
+                a.popularity-b.popularity : b.popularity-a.popularity));
+        setPopularitySort(prev => !prev);
+    }
+
     const findBookByTitle = () => {
         return data.find((r) => r.title === selectedBookTitle);
     }
@@ -110,6 +118,7 @@ const UserBooks = () => {
             <UserBooksTable books={filteredUsers}
                                 authorSort={authorSort} titleSort={titleSort}
                                 genreSort={genreSort} alphaSorter={alphaSorter}
+                                    popularitySort={popularitySort} sortByPopularity={sortByPopularity}
                                 availableSort={availabilitySort} sortAvailable={sortByAvailability}
                                 setEditionsMod={setEditionsMod} SetSelectedBookTitle={SetSelectedBookTitle}
             />

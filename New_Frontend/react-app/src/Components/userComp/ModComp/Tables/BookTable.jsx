@@ -1,7 +1,7 @@
 import React from 'react';
 import BookRow from "./BookRow";
 
-const BookTable = ({ books, titleSort, authorSort, genreSort, alphaSorter,
+const BookTable = ({ books, titleSort, authorSort, genreSort, alphaSorter, popularitySort, sortByPopularity,
                        setAddModal, setUpdateModal, setDeleteModal, setEditionsModal, setSelectedBookId }) => {
     return (
         <div className="bookTable">
@@ -16,6 +16,9 @@ const BookTable = ({ books, titleSort, authorSort, genreSort, alphaSorter,
                     <button className="sortButton" onClick={() => alphaSorter(genreSort, "genre")}>
                         Sort By Genre {genreSort ? "▲" : "▼"}
                     </button>
+                    <button className="sortButton" onClick={sortByPopularity}>
+                        Sort By Popularity {popularitySort ? "▲" : "▼"}
+                    </button>
                 </div>
                 <button className="adder" onClick={() => setAddModal(true)}>
                     Add
@@ -25,6 +28,7 @@ const BookTable = ({ books, titleSort, authorSort, genreSort, alphaSorter,
                 <div>Title:</div>
                 <div>Author:</div>
                 <div>Genre:</div>
+                <div>Popularity:</div>
                 <div>Actions:</div>
             </div>
             {books.map(book => (

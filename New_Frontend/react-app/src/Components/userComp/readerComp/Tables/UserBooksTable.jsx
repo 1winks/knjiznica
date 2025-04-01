@@ -1,8 +1,9 @@
 import React from 'react';
 import UserBooksRow from "./UserBooksRow";
 
-const UserBooksTable = ({ books, alphaSorter, titleSort, authorSort, genreSort, availableSort, sortAvailable,
-                        setEditionsMod, SetSelectedBookTitle}) => {
+const UserBooksTable = ({ books, alphaSorter, titleSort, authorSort, genreSort,
+                            availableSort, sortAvailable, popularitySort, sortByPopularity,
+                            setEditionsMod, SetSelectedBookTitle}) => {
     return (
         <div className="bookTable">
             <div>
@@ -19,12 +20,16 @@ const UserBooksTable = ({ books, alphaSorter, titleSort, authorSort, genreSort, 
                     <button className="sortButton" onClick={sortAvailable}>
                         Sort By Availability {availableSort ? "▲" : "▼"}
                     </button>
+                    <button className="sortButton" onClick={sortByPopularity}>
+                        Sort By Popularity {popularitySort ? "▲" : "▼"}
+                    </button>
                 </div>
             </div>
             <div className="userAvailableTableHeader">
                 <div>Title:</div>
                 <div>Author:</div>
                 <div>Genre:</div>
+                <div>Popularity:</div>
                 <div>Available:</div>
             </div>
             {books.map(book => (

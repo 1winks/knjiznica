@@ -85,6 +85,7 @@ public class BookServiceJpa implements BookService {
             bookDTO.setTitle(book.getTitle());
             bookDTO.setAuthor(book.getAuthor());
             bookDTO.setGenre(book.getGenre());
+            bookDTO.setPopularity(book.getPopularity());
             List<BookEdition> bookEditions = bookEditionRepo.findAllByBook(book);
             List<EditionDTO3> editionsISBNS = new ArrayList<>();
             for (BookEdition bookEdition : bookEditions) {

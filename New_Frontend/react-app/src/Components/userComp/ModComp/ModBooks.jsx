@@ -16,6 +16,7 @@ const ModBooks = () => {
     const [titleSort, setTitleSort] = useState(true);
     const [authorSort, setAuthorSort] = useState(true);
     const [genreSort, setGenreSort] = useState(true);
+    const [popularitySort, setPopularitySort] = useState(true);
 
     const [selectedBookId, SetSelectedBookId] = useState(0);
     const [formError, setFormError] = useState("");
@@ -194,6 +195,13 @@ const ModBooks = () => {
         }
     }
 
+    const sortByPopularity = () => {
+        setFilteredUsers(prevUsers =>
+            prevUsers.toSorted((a,b) => popularitySort ?
+                a.popularity-b.popularity : b.popularity-a.popularity));
+        setPopularitySort(prev => !prev);
+    }
+
     const findBookById = () => {
         return data.find((r) => r.id === selectedBookId);
     }
@@ -214,6 +222,7 @@ const ModBooks = () => {
             <BookTable books={filteredUsers}
                 titleSort={titleSort} authorSort={authorSort}
                 genreSort={genreSort} alphaSorter={alphaSorter}
+                popularitySort={popularitySort} sortByPopularity={sortByPopularity}
                 setAddModal={setAddModal} setUpdateModal={setUpdateModal}
                 setDeleteModal={setDeleteModal} setEditionsModal={setEditionsModal}
                 setSelectedBookId={SetSelectedBookId}

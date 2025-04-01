@@ -28,6 +28,9 @@ public class Book {
     @Column(nullable = false)
     private String genre;
 
+    @Column(nullable = false)
+    private Long popularity = 0L;
+
     @JsonIgnore
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private Set<BookEdition> bookEditions = new HashSet<>();

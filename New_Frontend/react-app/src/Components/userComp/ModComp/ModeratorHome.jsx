@@ -25,7 +25,7 @@ const ModeratorHome = () => {
                 </ul>
             </div>
             <div className="adminContent">
-                {view === "home" && <ModHomeComp/>}
+                {view === "home" && <ModHomeComp handleView={handleView}/>}
                 {view === "book" && <ModBooks/>}
                 {view === "order" && <ModOrders/>}
                 {view === "reader" && <ModReaders/>}

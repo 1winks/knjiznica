@@ -26,6 +26,9 @@ public class OrderServiceJpa implements OrderService {
     private EditionRepository editionRepo;
 
     @Autowired
+    private BookRepository bookRepo;
+
+    @Autowired
     private BookEditionRepository bookEditionRepo;
 
     @Autowired
@@ -33,6 +36,7 @@ public class OrderServiceJpa implements OrderService {
 
     @Autowired
     private OrderReaderRepository orderReaderRepo;
+
 
     @Override
     public List<OrderDTO2> listAll() {
@@ -97,6 +101,11 @@ public class OrderServiceJpa implements OrderService {
             edition.setBorrowDate(orderDTO.getStartDate());
             edition.setReturnDate(orderDTO.getEndDate());
             editionRepo.save(edition);
+
+            BookEdition bookEdition = bookEditionRepo.findByEdition(edition);
+            Book book = bookEdition.getBook();
+            book.setPopularity(book.getPopularity()+1);
+            bookRepo.save(book);
         }
         return order;
     }

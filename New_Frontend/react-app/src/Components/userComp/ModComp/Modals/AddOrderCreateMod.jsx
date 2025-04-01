@@ -1,6 +1,7 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import EditionsOrderRow from "./OrderEditions/EditionsOrderRow";
 import {getJwt} from "../../../../Utils/userData";
+import UsernameSearchInput from "./UsernameSearchInput";
 
 const AddOrderCreateMod = ({ editions, setCreatorModal, setError, setAdded,
                                setNumSelected, setEditionsToAdd, closeParentModal}) => {
@@ -9,7 +10,36 @@ const AddOrderCreateMod = ({ editions, setCreatorModal, setError, setAdded,
     const [formError, setFormError] = useState("");
     const [startDate, setStartDate] = useState(today);
     const [endDate, setEndDate] = useState(monthToday);
+
+    const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error2, setError2] = useState(null);
     const [username, setUsername] = useState("");
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch('http://localhost:8080/api/resources/readers/renewed', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${getJwt()}`
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error('Failed to fetch data');
+                }
+                const result = await response.json();
+                const usernames = result.map(reader => reader.username);
+                setData(usernames);
+            } catch (error) {
+                setError2(error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
+    }, []);
 
     const closeModal = () => {
         setCreatorModal(false);
@@ -65,6 +95,8 @@ const AddOrderCreateMod = ({ editions, setCreatorModal, setError, setAdded,
         }
     }
 
+    if (loading) return <p>Loading...</p>;
+    if (error2) return <p>Error: {error2}</p>;
     return (
         <div className="modal">
             <div className="modal-content">
@@ -72,10 +104,7 @@ const AddOrderCreateMod = ({ editions, setCreatorModal, setError, setAdded,
                 {formError && <div style={{color: "red"}}>{formError}</div>}
                 <div className="addLabels">
                     <label>Username:</label>
-                    <input type="text" value={username}
-                           placeholder={"Enter username"}
-                           onChange={(e) => setUsername(e.target.value)}
-                    />
+                    <UsernameSearchInput usernames={data} setUsername={setUsername} />
                     <label>Start Date:</label>
                     <input
                         type="date"

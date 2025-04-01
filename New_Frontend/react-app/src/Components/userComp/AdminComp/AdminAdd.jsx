@@ -70,7 +70,7 @@ const AdminAdd = () => {
 
     return (
         <div className="adminAdd">
-            <div className="registerForm">
+            <div className="registerForm adminRegisterForm">
                 <h2>Add User</h2>
                 {errorMessage && <p style={{color: 'red'}}>{errorMessage}</p>}
                 <form onSubmit={handleSubmit}>

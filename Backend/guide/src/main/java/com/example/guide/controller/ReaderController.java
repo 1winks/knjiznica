@@ -1,7 +1,9 @@
 package com.example.guide.controller;
 import com.example.guide.domain.Reader;
+import com.example.guide.dto.DateDTO;
 import com.example.guide.dto.ReaderDTO;
 import com.example.guide.dto.ReadersResponse;
+import com.example.guide.dto.ReadersResponse2;
 import com.example.guide.service.ReaderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,6 +24,12 @@ public class ReaderController {
         return readerService.listAll();
     }
 
+    @GetMapping("/renewed")
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
+    public List<ReadersResponse2> listActiveReaders(){
+        return readerService.listActive();
+    }
+
     @GetMapping("/{readerId}")
     @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public Reader findReader(@PathVariable Long readerId){
@@ -40,4 +48,9 @@ public class ReaderController {
         return readerService.updateReader(id, readerDTO);
     }
 
+    @PutMapping("/renew/{id}")
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
+    public Reader renewReader(@PathVariable Long id, @RequestBody DateDTO dateDTO) {
+        return readerService.renewReader(id, dateDTO);
+    }
 }
