@@ -72,4 +72,16 @@ public class BookController {
     public void deleteBook(@PathVariable Long id) {
         bookService.deleteBook(id);
     }
+
+    @GetMapping("/authors")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public Set<String> listAuthors(){
+        return bookService.getAllAuthors();
+    }
+
+    @GetMapping("/genres")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public Set<String> listGenres(){
+        return bookService.getAllGenres();
+    }
 }

@@ -180,4 +180,26 @@ public class BookServiceJpa implements BookService {
         }
         return booksRead;
     }
+
+    @Override
+    public Set<String> getAllGenres() {
+        Set<String> genres = new HashSet<>();
+        List<Book> books = bookRepo.findAll();
+        for (Book book : books) {
+            String genre = book.getGenre();
+            genres.add(genre);
+        }
+        return genres;
+    }
+
+    @Override
+    public Set<String> getAllAuthors() {
+        Set<String> authors = new HashSet<>();
+        List<Book> books = bookRepo.findAll();
+        for (Book book : books) {
+            String author = book.getAuthor();
+            authors.add(author);
+        }
+        return authors;
+    }
 }

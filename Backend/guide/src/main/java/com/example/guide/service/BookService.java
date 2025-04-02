@@ -24,4 +24,8 @@ public interface BookService {
     List<BookDTO4> listPopular();
 
     Set<Book> listBookUserNum(UserDTO userDTO);
+
+    Set<String> getAllGenres();
+
+    Set<String> getAllAuthors();
 }
