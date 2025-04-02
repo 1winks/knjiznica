@@ -15,7 +15,8 @@ const Welcome = () => {
             <header className="welcome-header">
                 <ul>
                     <li>
-                        <button className="header-link" onClick={() => handleScrollToSection('app-info')}>App</button></li>
+                        <button className="header-link" onClick={() => handleScrollToSection('app-info')}>App</button>
+                    </li>
                     <li>
                         <button className="header-link" onClick={() => handleScrollToSection('faq')}>FAQ</button>
                     </li>
@@ -66,8 +67,8 @@ const Welcome = () => {
                         <li>📖 <strong>Your Collection:</strong> All borrowed titles are stored in your
                             user account for quick access.
                         </li>
-                        <li>🕒 <strong>Track Orders:</strong> Transparent overview of your ordered and borrowed books,
-                            including delivery and return status.
+                        <li>🕒 <strong>Track Orders:</strong> Transparent overview of your borrowed books,
+                            including date and return status.
                         </li>
                         <li>➕ <strong>Personalized Recommendations:</strong> Our smart algorithm suggests books based on
                             your reading preferences.

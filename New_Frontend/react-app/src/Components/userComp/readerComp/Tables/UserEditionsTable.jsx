@@ -18,8 +18,8 @@ const UserEditionsTable = ({ editions, isbnSort, availabilitySort, sortIsbn, sor
                 <div>ISBN:</div>
                 <div>Available:</div>
             </div>
-            {editions.map(book => (
-                <UserEditionsRow key={book} {...book}/>
+            {editions.map((book, index) => (
+                <UserEditionsRow key={index} {...book}/>
             ))}
         </div>
     );

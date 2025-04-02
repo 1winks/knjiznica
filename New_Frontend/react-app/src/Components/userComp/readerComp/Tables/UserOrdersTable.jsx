@@ -21,8 +21,8 @@ const UserOrdersTable = ({ orders, sortByDate, dateSort, sortByActivity, activit
                 <div>Returned:</div>
                 <div>Books:</div>
             </div>
-            {orders.map(order => (
-                <UserOrdersRow key={order} {...order}
+            {orders.map((order, index) => (
+                <UserOrdersRow key={index} {...order}
                                setBooksModal={setBooksModal}
                                setSelectedEditions={setSelectedEditions}
                                setSelectedStart={setSelectedStart}

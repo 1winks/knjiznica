@@ -13,10 +13,7 @@ import com.example.guide.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class BookServiceJpa implements BookService {
@@ -38,6 +35,31 @@ public class BookServiceJpa implements BookService {
     @Override
     public List<Book> listAll() {
         return bookRepo.findAll();
+    }
+
+    @Override
+    public List<BookDTO4> listPopular() {
+        List<Book> books = bookRepo.findAll();
+        List<BookDTO4> popular = new ArrayList<>();
+        books.sort(Comparator.comparing(Book::getPopularity).reversed());
+        for (int i=0; i<3; i++) {
+            Book book = books.get(i);
+            BookDTO4 bookDTO = new BookDTO4();
+            bookDTO.setTitle(book.getTitle());
+            bookDTO.setAuthor(book.getAuthor());
+            bookDTO.setGenre(book.getGenre());
+            String popularity;
+            if (i==0) {
+                popularity="1st";
+            } else if (i==1) {
+                popularity="2nd";
+            } else {
+                popularity="3rd";
+            }
+            bookDTO.setPopularity(popularity);
+            popular.add(bookDTO);
+        }
+        return popular;
     }
 
     @Override
@@ -113,7 +135,6 @@ public class BookServiceJpa implements BookService {
     @Override
     public List<BookDTO3> listBookUser(UserDTO userDTO) {
         String username = userDTO.getUsername();
-        System.out.println(username);
         List<BookDTO3> userBooks = new ArrayList<>();
         User user = userRepo.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException(
@@ -136,5 +157,27 @@ public class BookServiceJpa implements BookService {
             }
         }
         return userBooks;
+    }
+
+    @Override
+    public Set<Book> listBookUserNum(UserDTO userDTO) {
+        String username = userDTO.getUsername();
+        Set<Book> booksRead = new HashSet<>();
+        User user = userRepo.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException(
+                        "User not found with username: " + username));
+        Reader reader = user.getReader();
+        List<OrderReader> readerOrders = orderReaderRepo.findAllByReader(reader);
+        for (OrderReader orderReader : readerOrders) {
+            Order order = orderReader.getOrder();
+            List<EditionOrder> editionOrders = editionOrderRepo.findAllByOrder(order);
+            for (EditionOrder editionOrder : editionOrders) {
+                Edition edition = editionOrder.getEdition();
+                BookEdition bookEdition = bookEditionRepo.findByEdition(edition);
+                Book book = bookEdition.getBook();
+                booksRead.add(book);
+            }
+        }
+        return booksRead;
     }
 }

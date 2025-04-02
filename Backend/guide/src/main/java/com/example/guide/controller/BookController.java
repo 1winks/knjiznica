@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @CrossOrigin
@@ -24,16 +25,28 @@ public class BookController {
         return bookService.listAll();
     }
 
-    @GetMapping("bookeds")
+    @GetMapping("/bookeds")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public List<BookDTO2> listBookEditions(){
         return bookService.listBookEds();
     }
 
-    @PostMapping("bookuser")
+    @GetMapping("/popular")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public List<BookDTO4> listPopular(){
+        return bookService.listPopular();
+    }
+
+    @PostMapping("/bookuser")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
     public List<BookDTO3> listBooksUser(@RequestBody UserDTO userDTO){
         return bookService.listBookUser(userDTO);
+    }
+
+    @PostMapping("/numread")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public Set<Book> listBooksUserNum(@RequestBody UserDTO userDTO){
+        return bookService.listBookUserNum(userDTO);
     }
 
     @GetMapping("/{bookId}")

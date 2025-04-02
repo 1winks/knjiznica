@@ -32,8 +32,8 @@ const UserBooksTable = ({ books, alphaSorter, titleSort, authorSort, genreSort,
                 <div>Popularity:</div>
                 <div>Available:</div>
             </div>
-            {books.map(book => (
-                <UserBooksRow key={book} {...book}
+            {books.map((book, index) => (
+                <UserBooksRow key={index} {...book}
                               setEditionsMod={setEditionsMod}
                               SetSelectedBookTitle={SetSelectedBookTitle}/>
             ))}

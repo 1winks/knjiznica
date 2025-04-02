@@ -1,12 +1,10 @@
 package com.example.guide.service;
 
 import com.example.guide.domain.Book;
-import com.example.guide.dto.BookDTO;
-import com.example.guide.dto.BookDTO2;
-import com.example.guide.dto.BookDTO3;
-import com.example.guide.dto.UserDTO;
+import com.example.guide.dto.*;
 
 import java.util.List;
+import java.util.Set;
 
 public interface BookService {
     List<Book> listAll();
@@ -22,4 +20,8 @@ public interface BookService {
     List<BookDTO2> listBookEds();
 
     List<BookDTO3> listBookUser(UserDTO userDTO);
+
+    List<BookDTO4> listPopular();
+
+    Set<Book> listBookUserNum(UserDTO userDTO);
 }
