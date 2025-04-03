@@ -1,15 +1,17 @@
 package com.example.guide.controller;
 
 import com.example.guide.domain.Book;
-import com.example.guide.domain.Edition;
 import com.example.guide.dto.*;
+import com.example.guide.recommender.BookCalc;
+import com.example.guide.recommender.Recommend;
+import com.example.guide.recommender.UserCalc;
 import com.example.guide.service.BookService;
-import com.example.guide.service.EditionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @RestController
@@ -18,6 +20,9 @@ import java.util.Set;
 public class BookController {
     @Autowired
     private BookService bookService;
+
+    @Autowired
+    private Recommend recommend;
 
     @GetMapping("")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
@@ -84,4 +89,18 @@ public class BookController {
     public Set<String> listGenres(){
         return bookService.getAllGenres();
     }
+
+    @PostMapping("/recommendprofile")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public Map<String, Map<String, Integer>> listStats(@RequestBody UserDTO userDTO){
+        System.out.println();
+        return bookService.getUserStats(userDTO);
+    }
+
+    @PostMapping("/recommend")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public List<BookDTO4> topRecommends(@RequestBody UserDTO userDTO){
+        return recommend.recommend(userDTO);
+    }
+
 }

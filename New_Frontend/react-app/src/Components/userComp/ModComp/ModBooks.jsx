@@ -58,7 +58,8 @@ const ModBooks = () => {
     useEffect(() => {
         const filtered = data.filter((book) =>
             book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            book.author.toLowerCase().includes(searchTerm.toLowerCase())
+            book.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            book.genre.toLowerCase().includes(searchTerm.toLowerCase())
         );
         setFilteredUsers(filtered);
     }, [searchTerm, data]);
@@ -214,7 +215,7 @@ const ModBooks = () => {
                 <h2>Book management:</h2>
                 <input
                     type="text"
-                    placeholder="Search by title or author"
+                    placeholder="Search by title/author/genre"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />

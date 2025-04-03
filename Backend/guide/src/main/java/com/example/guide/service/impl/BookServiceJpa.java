@@ -202,4 +202,24 @@ public class BookServiceJpa implements BookService {
         }
         return authors;
     }
+
+    @Override
+    public Map<String, Map<String, Integer>> getUserStats(UserDTO userDTO) {
+        Set<Book> userBooks = listBookUserNum(userDTO);
+        Map<String, Map<String, Integer>> profil = new HashMap<>();
+        Map<String, Integer> authorMap = new HashMap<>();
+        Map<String, Integer> genreMap = new HashMap<>();
+
+        for (Book book : userBooks) {
+            String author = book.getAuthor();
+            String genre = book.getGenre();
+            authorMap.put(author, authorMap.getOrDefault(author, 0) + 1);
+            genreMap.put(genre, genreMap.getOrDefault(genre, 0) + 1);
+        }
+
+        profil.put("authors", authorMap);
+        profil.put("genres", genreMap);
+        return profil;
+    }
+
 }

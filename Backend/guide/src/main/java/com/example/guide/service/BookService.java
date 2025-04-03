@@ -4,6 +4,7 @@ import com.example.guide.domain.Book;
 import com.example.guide.dto.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public interface BookService {
@@ -28,4 +29,7 @@ public interface BookService {
     Set<String> getAllGenres();
 
     Set<String> getAllAuthors();
+
+    Map<String, Map<String, Integer>> getUserStats(UserDTO userDTO);
+
 }

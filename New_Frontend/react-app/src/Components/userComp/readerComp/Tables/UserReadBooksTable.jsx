@@ -26,8 +26,8 @@ const UserReadBooksTable = ({ books, alphaSorter, titleSort, authorSort, genreSo
                 <div>Author:</div>
                 <div>Genre:</div>
             </div>
-            {books.map(book => (
-                <UserReadBooksRow key={book.isbn} {...book}/>
+            {books.map((book, index) => (
+                <UserReadBooksRow key={index} {...book}/>
             ))}
         </div>
     );

@@ -17,11 +17,11 @@ const UserRecommend = () => {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${getJwt()}`
+                        'Authorization': `Bearer ${getJwt()}`,
                     },
                     body: JSON.stringify({
-                        username: username
-                    })
+                        username: username,
+                    }),
                 });
                 if (!response.ok) {
                     throw new Error('Failed to fetch data');
@@ -30,8 +30,6 @@ const UserRecommend = () => {
                 setBooksRead(result);
             } catch (error) {
                 setError(error.message);
-            } finally {
-                setLoading(false);
             }
         };
         const fetchPopular = async () => {
@@ -40,8 +38,8 @@ const UserRecommend = () => {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${getJwt()}`
-                    }
+                        'Authorization': `Bearer ${getJwt()}`,
+                    },
                 });
                 if (!response.ok) {
                     throw new Error('Failed to fetch data');
@@ -50,8 +48,6 @@ const UserRecommend = () => {
                 setBooksPopular(result);
             } catch (error) {
                 setError(error.message);
-            } finally {
-                setLoading(false);
             }
         };
         const fetchRecommend = async () => {
@@ -60,11 +56,11 @@ const UserRecommend = () => {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${getJwt()}`
+                        'Authorization': `Bearer ${getJwt()}`,
                     },
                     body: JSON.stringify({
-                        username: username
-                    })
+                        username: username,
+                    }),
                 });
                 if (!response.ok) {
                     throw new Error('Failed to fetch data');
@@ -73,24 +69,32 @@ const UserRecommend = () => {
                 setBooksRecommend(result);
             } catch (error) {
                 setError(error.message);
+            }
+        };
+        const loadData = async () => {
+            setLoading(true);
+            try {
+                await Promise.all([fetchBooks(), fetchPopular()]);
+                if (booksRead.length >= 10) {
+                    await fetchRecommend();
+                }
+            } catch (error) {
+                setError(error.message);
             } finally {
                 setLoading(false);
             }
         };
-        fetchBooks();
-        fetchPopular();
-        if (booksRead.length>999) {
-            console.log("tu ide recommender data");
-            fetchRecommend();
-        }
-    }, []);
+        loadData();
+    }, [username, booksRead.length]);
 
     const determineData = () => {
-        if (booksRead.length>999) {
-            return booksRecommend.map((book, index) => (<BookElement key={index} {...book}/>))
+        if (booksRead.length >= 10 && booksRecommend.length > 0) {
+            return booksRecommend.map((book, index) => (<BookElement key={index} {...book} />));
         }
-        return booksPopular.map((book, index) => (<BookElement key={index} {...book}/>))
-    }
+        return booksPopular.length > 0 ?
+            booksPopular.map((book, index) => (<BookElement key={index} {...book} />)) :
+            <p>No recommendations available.</p>;
+    };
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
