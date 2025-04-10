@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {getJwt} from "../../../../Utils/userData";
 
-const ReaderRenewModal = ({ closeModal, selectedReaderId, setAdded }) => {
+const ReaderRenewModal = ({ closeModal, selectedReaderId, setAdded, findReaderById }) => {
     const today = new Date().toISOString().split("T")[0];
     const sixMonthToday = new Date(Date.now() + 6 * 30 * 24 * 60 * 60 * 1000)
         .toISOString().split("T")[0];
@@ -10,6 +10,7 @@ const ReaderRenewModal = ({ closeModal, selectedReaderId, setAdded }) => {
     const [formError, setFormError] = useState("");
     const [date, setDate] = useState(sixMonthToday);
 
+    const username = findReaderById(selectedReaderId).username;
 
     const onUpdate = async (readerId) => {
         if (!date) {
@@ -44,8 +45,8 @@ const ReaderRenewModal = ({ closeModal, selectedReaderId, setAdded }) => {
     if (error) return <p>Error: {error}</p>;
     return (
         <div className="modal">
-            <div className="modal-content">
-                <h2>Update Membership</h2>
+            <div className="modal-content readerRenewModal">
+                <h2>Renew {username}'s membership until:</h2>
                 {formError && <div style={{color: "red"}}>{formError}</div>}
                 <div className="addLabels">
                     <label>End Date:</label>

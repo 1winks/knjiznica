@@ -9,7 +9,7 @@ const AdminView = () => {
 
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredUsers, setFilteredUsers] = useState([]);
-    const [ roleSort, setRoleSort ] = useState(true);
+    const [ roleSort, setRoleSort ] = useState(false);
     const [ nameSort, setNameSort ] = useState(true);
 
     const [modal, setModal] = useState(false);

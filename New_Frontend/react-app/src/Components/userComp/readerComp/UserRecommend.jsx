@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {getJwt, getUsernameFromJwt} from "../../../Utils/userData";
 import BookElement from "./Tables/BookElement";
 
-const UserRecommend = () => {
+const UserRecommend = ({ handleView }) => {
     const username = getUsernameFromJwt();
     const [booksRead, setBooksRead] = useState([]);
     const [booksPopular, setBooksPopular] = useState([]);
@@ -89,10 +89,10 @@ const UserRecommend = () => {
 
     const determineData = () => {
         if (booksRead.length >= 10 && booksRecommend.length > 0) {
-            return booksRecommend.map((book, index) => (<BookElement key={index} {...book} />));
+            return booksRecommend.map((book, index) => (<BookElement key={index} {...book} popular={false}/>));
         }
         return booksPopular.length > 0 ?
-            booksPopular.map((book, index) => (<BookElement key={index} {...book} />)) :
+            booksPopular.map((book, index) => (<BookElement key={index} {...book} popular={true}/>)) :
             <p>No recommendations available.</p>;
     };
 
@@ -114,6 +114,11 @@ const UserRecommend = () => {
                     </div>
                     <div className="recommendationsContainerBody">
                         {determineData()}
+                    </div>
+                    <div className="recommendationsContainerButton">
+                        <button onClick={() => handleView("book")}>
+                            Browse Books
+                        </button>
                     </div>
                 </div>
             </div>

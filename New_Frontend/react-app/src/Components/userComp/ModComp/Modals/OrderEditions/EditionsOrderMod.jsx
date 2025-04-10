@@ -13,6 +13,8 @@ const EditionsOrderMod = ({ closeModal, selectedOrderId, findOrderById}) => {
     const [filteredUsers, setFilteredUsers] = useState([]);
     const [authorSort, setAuthorSort] = useState(false);
 
+    const username = findOrderById(selectedOrderId).username;
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -60,7 +62,7 @@ const EditionsOrderMod = ({ closeModal, selectedOrderId, findOrderById}) => {
         <div className="modal">
             <div className="modal-content editionsModal">
                 <div className="editionsHeader">
-                    <h2>Editions for order:</h2>
+                    <h2>Editions for {username}'s order:</h2>
                     <input
                         type="text"
                         placeholder="Search by title or author"

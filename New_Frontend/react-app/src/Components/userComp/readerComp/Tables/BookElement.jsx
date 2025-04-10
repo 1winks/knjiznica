@@ -1,6 +1,6 @@
 import React from 'react';
 
-const BookElement = ({title, author, genre, popularity}) => {
+const BookElement = ({title, author, genre, popularity, popular}) => {
     return (
         <div className="bookElement">
             <div>
@@ -9,7 +9,7 @@ const BookElement = ({title, author, genre, popularity}) => {
             </div>
             <div>
                 <div>Genre: {genre}</div>
-                <div>Popularity: {popularity}</div>
+                <div>{popular ? "Popularity" : "Times borrowed"}: {popularity}</div>
             </div>
         </div>
     );

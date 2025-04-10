@@ -37,7 +37,7 @@ const UserHome = () => {
                 {view === "book" && <UserBooks/>}
                 {view === "mybooks" && <UserReadBooks/>}
                 {view === "order" && <UserOrders/>}
-                {view === "recommend" && <UserRecommend/>}
+                {view === "recommend" && <UserRecommend handleView={handleView}/>}
             </div>
         </div>
     );

@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {getJwt} from "../../../Utils/userData";
 import ReaderTable from "./Tables/ReaderTable";
 import ReaderRenewModal from "./Modals/ReaderRenewModal";
+import ReaderUpdateModal from "./Modals/OrderEditions/ReaderUpdateModal";
 
 const ModReaders = () => {
     const [data, setData] = useState([]);
@@ -131,36 +132,22 @@ const ModReaders = () => {
                          sortEmails={sortEmails} emailSort={emailSort}
                          SetSelectedReaderId={SetSelectedReaderId}
             />
-            {modal && (
-                <div className="modal">
-                    <div className="modal-content">
-                        <h2>Update Reader</h2>
-                        {formError && <div style={{ color: "red" }}>{formError}</div>}
-                        <div className="labels">
-                            <label>Address:</label>
-                            <input type="text" value={inputAddressValue}
-                                   placeholder={findReaderById()?.address || "Enter address"}
-                                   onChange={(e) =>
-                                       setInputAddressValue(e.target.value)} required />
-                        </div>
-                        <div className="labels">
-                            <label>Phone Number:</label>
-                            <input type="text" value={inputPhoneValue}
-                                   placeholder={findReaderById()?.phoneNumber || "Enter phone number"}
-                                   onChange={(e) =>
-                                       setInputPhoneValue(e.target.value)} required />
-                        </div>
-                        <div className="modal-buttons">
-                            <button onClick={() => onUpdate(selectedReaderId)}>Save</button>
-                            <button onClick={closeModal}>Close</button>
-                        </div>
-                    </div>
-                </div>
-            )}
+            {modal && <ReaderUpdateModal
+                        closeModal={closeModal}
+                        selectedReaderId={selectedReaderId}
+                        findReaderById={findReaderById}
+                        inputAddressValue={inputAddressValue}
+                        setInputAddressValue={setInputAddressValue}
+                        inputPhoneValue={inputPhoneValue}
+                        setInputPhoneValue={setInputPhoneValue}
+                        onUpdate={onUpdate}
+                        formError={formError}
+            />}
             {renewModal && <ReaderRenewModal
                         closeModal={closeModal}
                         selectedReaderId={selectedReaderId}
                         setAdded={setAdded}
+                        findReaderById={findReaderById}
             />}
         </div>
     );
