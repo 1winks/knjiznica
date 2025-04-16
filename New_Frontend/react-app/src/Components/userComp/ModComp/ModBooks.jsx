@@ -5,6 +5,7 @@ import AddBookMod from "./Modals/AddBookMod";
 import DeleteBookMod from "./Modals/DeleteBookMod";
 import UpdateBookMod from "./Modals/UpdateBookMod";
 import EditionsMod from "./Modals/BookEditions/EditionsMod";
+import PopupError from "../PopupError";
 
 const ModBooks = () => {
     const [data, setData] = useState([]);
@@ -29,6 +30,7 @@ const ModBooks = () => {
     const [updateModal, setUpdateModal] = useState(false);
     const [deleteModal, setDeleteModal] = useState(false);
     const [editionsModal, setEditionsModal] = useState(false);
+    const [errorModal, setErrorModal] = useState(false);
 
 
     useEffect(() => {
@@ -104,11 +106,11 @@ const ModBooks = () => {
 
     const onAdd = async () => {
         if (inputAuthorValue.trim() === "" || inputTitleValue.trim() === "" || inputGenreValue.trim() === "") {
-            setFormError("Input cannot be empty!");
+            setFormError("Input can't be empty!");
+            setErrorModal(true);
             return;
-        } else {
-            setFormError("");
         }
+        setFormError("");
         try {
             const response = await fetch(
                 `http://localhost:8080/api/resources/books/add`, {
@@ -124,23 +126,26 @@ const ModBooks = () => {
                     })
                 });
             if (!response.ok) {
-                throw new Error('Failed to fetch data');
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to add book');
             }
+            console.log("Success adding!");
             setAdded(prevAdded => !prevAdded);
-        } catch (err) {
-            setError(error.message);
-        } finally {
             closeModal();
+        } catch (error) {
+            setFormError(error.message || "Unknown error occurred");
+            setErrorModal(true);
+            console.error("Error:", error);
         }
     }
 
     const onUpdate = async (bookId) => {
-        if (inputAuthorValue.trim() === "" || inputTitleValue.trim() === "" || inputGenreValue.trim() === "") {
-            setFormError("Input cannot be empty!");
+        if (inputAuthorValue.trim() === "" || inputGenreValue.trim() === "") {
+            setFormError("Input can't be empty!");
+            setErrorModal(true);
             return;
-        } else {
-            setFormError("");
         }
+        setFormError("");
         try {
             const response = await fetch(
                 `http://localhost:8080/api/resources/books/update/${bookId}`, {
@@ -150,19 +155,22 @@ const ModBooks = () => {
                         'Authorization': `Bearer ${getJwt()}`
                     },
                     body: JSON.stringify({
-                        title: inputTitleValue,
+                        title: findBookById(selectedBookId).title,
                         author: inputAuthorValue,
                         genre: inputGenreValue
                     })
                 });
             if (!response.ok) {
-                throw new Error('Failed to fetch data');
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to update book');
             }
+            console.log("Success updating!");
             setAdded(prevAdded => !prevAdded);
-        } catch (err) {
-            setError(error.message);
-        } finally {
             closeModal();
+        } catch (error) {
+            setFormError(error.message || "Unknown error occurred");
+            setErrorModal(true);
+            console.error("Error:", error);
         }
     }
 
@@ -176,23 +184,16 @@ const ModBooks = () => {
                 }
             });
             if (!response.ok) {
-                let errorMessage = 'Failed to delete book';
-                const contentType = response.headers.get('content-type');
-                if (contentType && contentType.includes('application/json')) {
-                    const errorData = await response.json();
-                    errorMessage = errorData.message || errorMessage;
-                } else {
-                    errorMessage = await response.text();
-                }
-                console.log(errorMessage);
-                throw new Error(errorMessage);
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to delete book');
             }
+            console.log("Success deleting!");
             setAdded(prevAdded => !prevAdded);
-        } catch (error) {
-            setError(error.message);
-            console.error('Error deleting book:', error);
-        } finally {
             closeModal();
+        } catch (error) {
+            setFormError(error.message || "Unknown error occurred");
+            setErrorModal(true);
+            console.error("Error:", error);
         }
     }
 
@@ -205,6 +206,11 @@ const ModBooks = () => {
 
     const findBookById = () => {
         return data.find((r) => r.id === selectedBookId);
+    }
+
+    const closeErrorModal = () => {
+        setErrorModal(false);
+        setFormError("");
     }
 
     if (loading) return <p>Loading...</p>;
@@ -228,7 +234,7 @@ const ModBooks = () => {
                 setDeleteModal={setDeleteModal} setEditionsModal={setEditionsModal}
                 setSelectedBookId={SetSelectedBookId}
             />
-            {addModal && <AddBookMod closeModal={closeModal} formError={formError}
+            {addModal && <AddBookMod closeModal={closeModal}
                                      onAdd={onAdd}
                                      setInputTitleValue={setInputTitleValue}
                                      setInputAuthorValue={setInputAuthorValue}
@@ -238,9 +244,8 @@ const ModBooks = () => {
                                      inputGenreValue={inputGenreValue}
                                      findBookById={findBookById}
             />}
-            {updateModal && <UpdateBookMod closeModal={closeModal} formError={formError}
+            {updateModal && <UpdateBookMod closeModal={closeModal}
                                         selectedBookId={selectedBookId} onUpdate={onUpdate}
-                                        setInputTitleValue={setInputTitleValue}
                                         setInputAuthorValue={setInputAuthorValue}
                                         setInputGenreValue={setInputGenreValue}
                                         inputTitleValue={inputTitleValue}
@@ -254,6 +259,10 @@ const ModBooks = () => {
             {editionsModal && <EditionsMod closeModal={closeModal}
                                         selectedBookId={selectedBookId}
                                         findBookById={findBookById}
+            />}
+            {errorModal && <PopupError
+                                        errorText={formError}
+                                        closeErrorModal={closeErrorModal}
             />}
         </div>
     );

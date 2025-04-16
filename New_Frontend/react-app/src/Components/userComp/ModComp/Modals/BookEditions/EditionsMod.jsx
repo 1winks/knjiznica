@@ -4,6 +4,7 @@ import EditionsTable from "./EditionsTable";
 import AddEditionMod from "./AddEditionMod";
 import UpdateEditionMod from "./UpdateEditionMod";
 import DeleteEditionMod from "./DeleteEditionMod";
+import PopupError from "../../../PopupError";
 
 const EditionsMod = ({ closeModal, findBookById, selectedBookId }) => {
     const book = findBookById();
@@ -26,6 +27,7 @@ const EditionsMod = ({ closeModal, findBookById, selectedBookId }) => {
     const [addModal, setAddModal] = useState(false);
     const [updateModal, setUpdateModal] = useState(false);
     const [deleteModal, setDeleteModal] = useState(false);
+    const [errorModal, setErrorModal] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -68,14 +70,21 @@ const EditionsMod = ({ closeModal, findBookById, selectedBookId }) => {
         setStartDate("");
         setEndDate("");
         setYesNo("yes");
+        setFormError("");
     }
 
     const onAdd = async () => {
         if (inputISBNValue.trim() === "") {
-            setFormError("Input cannot be empty!");
+            setFormError("Input can't be empty!");
+            setErrorModal(true);
             return;
-        } else if(inputISBNValue.trim().length!==13) {
+        } else if (!/^\d+$/.test(inputISBNValue.trim())) {
+            setFormError("ISBN must contain only digits!");
+            setErrorModal(true);
+            return;
+        } else if (inputISBNValue.trim().length !== 13) {
             setFormError("ISBN must be 13 digits long!");
+            setErrorModal(true);
             return;
         } else {
             setFormError("");
@@ -103,11 +112,11 @@ const EditionsMod = ({ closeModal, findBookById, selectedBookId }) => {
             const result = await response.json();
             console.log("Success:", result);
             setAdded(prevAdded => !prevAdded);
-        } catch (err) {
-            console.error("Error:", err);
-            setError(err.message || "Unknown error occurred");
-        } finally {
             closeEditionModal();
+        } catch (err) {
+            setFormError(err.message || "Unknown error occurred");
+            setErrorModal(true);
+            console.error("Error:", err);
         }
     }
     const onUpdate = async (editionId) => {
@@ -119,16 +128,24 @@ const EditionsMod = ({ closeModal, findBookById, selectedBookId }) => {
             borrowDate: startDate === "" ? null : startDate,
             returnDate: endDate === "" ? null : endDate
         };
-        if (setYesNo==="") {
-            setFormError("Availability cannot be empty!");
+        if (yesNo==="yes" && (startDate!=="" || endDate!=="")) {
+            setFormError("If available, dates must be empty!");
+            setErrorModal(true);
             return;
         }
-        if((startDate==="" && endDate!=="") || (startDate!=="" && endDate==="")) {
-            setFormError("Need to specify both dates");
-            return;
-        } else {
-            setFormError("");
+        if(yesNo==="no") {
+            if ((startDate!=="" && endDate==="") || (startDate==="" && endDate!=="")) {
+                setFormError("If unavailable, need to specify both dates or neither!");
+                setErrorModal(true);
+                return;
+            }
+            if (new Date(startDate) > new Date(endDate)) {
+                setFormError("End date can't be before the start date!");
+                setErrorModal(true);
+                return;
+            }
         }
+        setFormError("");
         try {
             const response = await fetch(
                 `http://localhost:8080/api/resources/editions/update/${editionId}`, {
@@ -146,11 +163,11 @@ const EditionsMod = ({ closeModal, findBookById, selectedBookId }) => {
             const result = await response.json();
             console.log("Success:", result);
             setAdded(prevAdded => !prevAdded);
-        } catch (err) {
-            console.error("Error:", err);
-            setError(err.message || "Unknown error occurred");
-        } finally {
             closeEditionModal();
+        } catch (err) {
+            setFormError(err.message || "Unknown error occurred");
+            setErrorModal(true);
+            console.error("Error:", err);
         }
     }
 
@@ -165,23 +182,16 @@ const EditionsMod = ({ closeModal, findBookById, selectedBookId }) => {
                 }
             });
             if (!response.ok) {
-                let errorMessage = 'Failed to delete edition';
-                const contentType = response.headers.get('content-type');
-                if (contentType && contentType.includes('application/json')) {
-                    const errorData = await response.json();
-                    errorMessage = errorData.message || errorMessage;
-                } else {
-                    errorMessage = await response.text();
-                }
-                console.log(errorMessage);
-                throw new Error(errorMessage);
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to delete edition');
             }
+            console.log("Success deleting!");
             setAdded(prevAdded => !prevAdded);
-        } catch (error) {
-            setError(error.message);
-            console.error('Error deleting edition:', error);
-        } finally {
             closeEditionModal();
+        } catch (err) {
+            setFormError(err.message || "Unknown error occurred");
+            setErrorModal(true);
+            console.error("Error:", err);
         }
     }
 
@@ -196,13 +206,18 @@ const EditionsMod = ({ closeModal, findBookById, selectedBookId }) => {
         setAvailabilitySort(prev => !prev);
     }
 
+    const closeErrorModal = () => {
+        setErrorModal(false);
+        setFormError("");
+    }
+
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
     return (
         <div className="modal">
             <div className="modal-content editionsModal">
                 <div className="editionsHeader">
-                    <h2>Editions for book "{book.title}":</h2>
+                    <h2>Editions for "{book.title}":</h2>
                     <input
                         type="text"
                         placeholder="Search by isbn"
@@ -226,14 +241,12 @@ const EditionsMod = ({ closeModal, findBookById, selectedBookId }) => {
                 {addModal && <AddEditionMod
                         closeEditionModal={closeEditionModal}
                         onAdd={onAdd}
-                        formError={formError}
                         inputISBNValue={inputISBNValue}
                         setInputISBNValue={setInputISBNValue}
                 />}
                 {updateModal && <UpdateEditionMod
                         closeEditionModal={closeEditionModal}
                         onUpdate={onUpdate}
-                        formError={formError}
                         findEditionById={findEditionById}
                         selectedEditionId={selectedEditionId}
                         yesNo={yesNo} setYesNo={setYesNo}
@@ -244,6 +257,10 @@ const EditionsMod = ({ closeModal, findBookById, selectedBookId }) => {
                         closeEditionModal={closeEditionModal}
                         selectedEditionId={selectedEditionId}
                         onDelete={onDelete}
+                />}
+                {errorModal && <PopupError
+                    errorText={formError}
+                    closeErrorModal={closeErrorModal}
                 />}
             </div>
         </div>

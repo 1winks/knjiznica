@@ -1,12 +1,11 @@
 import React from 'react';
 
-const UpdateEditionMod = ({ closeEditionModal, onUpdate, formError, selectedEditionId, findEditionById,
+const UpdateEditionMod = ({ closeEditionModal, onUpdate, selectedEditionId, findEditionById,
                               yesNo, setYesNo, startDate, setStartDate, endDate, setEndDate }) => {
     return (
         <div className="addBookMod modal">
             <div className="modal-content">
-                <h2>Update edition {findEditionById().isbn}</h2>
-                {formError && <div style={{color: "red"}}>{formError}</div>}
+                <h2>Update edition: {findEditionById().isbn}</h2>
                 <div className="labels">
                     <label>Available:</label>
                     <label>

@@ -2,6 +2,7 @@ package com.example.guide.service.impl;
 
 import com.example.guide.authentication.models.User;
 import com.example.guide.authentication.repository.UserRepository;
+import com.example.guide.controller.responses.BookAdderException;
 import com.example.guide.controller.responses.BookDeletionException;
 import com.example.guide.domain.*;
 import com.example.guide.dto.*;
@@ -70,6 +71,9 @@ public class BookServiceJpa implements BookService {
 
     @Override
     public Book createBook(BookDTO bookDTO) {
+        if (bookRepo.existsByTitle(bookDTO.getTitle())) {
+            throw new BookAdderException("Book with that title already exists!");
+        }
         Book book = new Book();
         book.setTitle(bookDTO.getTitle());
         book.setAuthor(bookDTO.getAuthor());
@@ -81,7 +85,6 @@ public class BookServiceJpa implements BookService {
     public Book updateBook(Long bookId, BookDTO bookDTO) {
         Book book = bookRepo.findById(bookId)
                 .orElseThrow(() -> new RuntimeException("Book not found with ID: " + bookId));
-        book.setTitle(bookDTO.getTitle());
         book.setAuthor(bookDTO.getAuthor());
         book.setGenre(bookDTO.getGenre());
         return bookRepo.save(book);
@@ -93,7 +96,7 @@ public class BookServiceJpa implements BookService {
                 .orElseThrow(() -> new RuntimeException("Book not found with ID: " + bookId));
         List<BookEdition> bookEditions = bookEditionRepo.findAllByBook(book);
         if (!bookEditions.isEmpty()) {
-            throw new BookDeletionException("Cant delete books with editions!");
+            throw new BookDeletionException("Can't delete books with editions!");
         }
         bookRepo.delete(book);
     }

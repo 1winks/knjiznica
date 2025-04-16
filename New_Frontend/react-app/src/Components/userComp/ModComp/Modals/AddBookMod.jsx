@@ -1,13 +1,12 @@
 import React from 'react';
 
-const AddBookMod = ({closeModal, formError, onAdd, findBookById,
+const AddBookMod = ({closeModal, onAdd, findBookById,
                         setInputTitleValue, setInputAuthorValue, setInputGenreValue,
                         inputTitleValue, inputAuthorValue, inputGenreValue}) => {
     return (
         <div className="addBookMod modal">
             <div className="modal-content">
-                <h2>Add a Book</h2>
-                {formError && <div style={{color: "red"}}>{formError}</div>}
+                <h2>Add a book</h2>
                 <div className="labels">
                     <label>Title:</label>
                     <input type="text" value={inputTitleValue}

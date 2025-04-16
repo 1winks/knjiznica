@@ -1,11 +1,11 @@
-import React from 'react';
+import React, {useState} from 'react';
+import PopupError from "../../../PopupError";
 
-const AddEditionMod = ({ closeEditionModal, onAdd, formError, inputISBNValue, setInputISBNValue }) => {
+const AddEditionMod = ({ closeEditionModal, onAdd, inputISBNValue, setInputISBNValue }) => {
     return (
         <div className="addBookMod modal">
             <div className="modal-content">
-                <h2>Add an Edition</h2>
-                {formError && <div style={{color: "red"}}>{formError}</div>}
+                <h2>Add an edition</h2>
                 <div className="labels">
                     <label>ISBN:</label>
                     <input type="text" value={inputISBNValue}

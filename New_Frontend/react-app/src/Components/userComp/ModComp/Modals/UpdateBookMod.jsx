@@ -1,20 +1,11 @@
 import React from 'react';
 
-const UpdateBookMod = ({closeModal, formError, onUpdate, selectedBookId, findBookById,
-                           setInputTitleValue, setInputAuthorValue, setInputGenreValue,
-                           inputTitleValue, inputAuthorValue, inputGenreValue}) => {
+const UpdateBookMod = ({closeModal, onUpdate, selectedBookId, findBookById,
+                           setInputAuthorValue, setInputGenreValue, inputAuthorValue, inputGenreValue}) => {
     return (
         <div className="updateBookMod modal">
             <div className="modal-content">
-                <h2>Update Book</h2>
-                {formError && <div style={{color: "red"}}>{formError}</div>}
-                <div className="labels">
-                    <label>Title:</label>
-                    <input type="text" value={inputTitleValue}
-                           placeholder={findBookById()?.title || "Enter title"}
-                           onChange={(e) =>
-                               setInputTitleValue(e.target.value)}/>
-                </div>
+                <h2>Update book: {findBookById(selectedBookId).title}</h2>
                 <div className="labels">
                     <label>Author:</label>
                     <input type="text" value={inputAuthorValue}

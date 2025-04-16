@@ -1,6 +1,6 @@
 package com.example.guide.service.impl;
 
-import com.example.guide.controller.responses.BookDeletionException;
+import com.example.guide.controller.responses.EditionAdderException;
 import com.example.guide.controller.responses.EditionDeletionException;
 import com.example.guide.domain.Book;
 import com.example.guide.domain.BookEdition;
@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -81,6 +80,10 @@ public class EditionServiceJpa implements EditionService {
 
     @Override
     public Edition createEdition(EditionDTO editionDTO) {
+        if (editionRepo.existsByIsbn(editionDTO.getIsbn())) {
+            throw new EditionAdderException("ISBN already exists!");
+        }
+
         Edition edition = new Edition();
         edition.setAvailable(editionDTO.getAvailable());
         edition.setIsbn(editionDTO.getIsbn());
@@ -105,7 +108,6 @@ public class EditionServiceJpa implements EditionService {
         Edition edition = editionRepo.findById(editionId)
                 .orElseThrow(() -> new RuntimeException("Edition not found with ID: " + editionId));
         edition.setAvailable(editionDTO.getAvailable());
-        edition.setIsbn(editionDTO.getIsbn());
         edition.setBorrowDate(editionDTO.getBorrowDate());
         edition.setReturnDate(editionDTO.getReturnDate());
         editionRepo.save(edition);
@@ -118,7 +120,7 @@ public class EditionServiceJpa implements EditionService {
                 .orElseThrow(() -> new RuntimeException("Edition not found with ID: " + editionId));
         List<EditionOrder> editionOrders = editionOrderRepo.findAllByEdition(edition);
         if (!editionOrders.isEmpty()) {
-            throw new EditionDeletionException("Cant delete ordered editions!");
+            throw new EditionDeletionException("Can't delete once ordered editions!");
         }
         BookEdition bookEdition = bookEditionRepo.findByEdition(edition);
         if (bookEdition != null) {

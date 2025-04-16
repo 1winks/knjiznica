@@ -12,6 +12,8 @@ public interface EditionRepository extends JpaRepository<Edition, Long> {
     Edition findEditionByIsbn(Long isbn);
     List<Edition> findEditionsByAvailableTrue();
 
+    boolean existsByIsbn(Long isbn);
+
     @Query("SELECT e FROM Edition e WHERE e.returnDate IS NULL OR e.returnDate < :date")
     List<Edition> findEditionsAvailableAfterDate(@Param("date") LocalDate date);
 }
