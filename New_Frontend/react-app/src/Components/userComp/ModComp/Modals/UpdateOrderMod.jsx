@@ -3,7 +3,7 @@ import { X } from "lucide-react";
 
 
 const UpdateOrderMod = ({ closeModal, selectedOrderId, onUpdate, returnDate, setReturnDate,
-                            findOrderById, formError }) => {
+                            findOrderById }) => {
     const orderReturnDate = findOrderById(selectedOrderId).returnedDate;
     const username = findOrderById(selectedOrderId).username;
 
@@ -11,7 +11,6 @@ const UpdateOrderMod = ({ closeModal, selectedOrderId, onUpdate, returnDate, set
         <div className="updateBookMod modal">
             <div className="modal-content orderUpdateModal">
                 <h2>Update {username}'s order:</h2>
-                {formError && <div style={{color: "red"}}>{formError}</div>}
                 <label>
                     Current return date:
                 </label>

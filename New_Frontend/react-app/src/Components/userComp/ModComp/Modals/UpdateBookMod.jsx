@@ -5,7 +5,7 @@ const UpdateBookMod = ({closeModal, onUpdate, selectedBookId, findBookById,
     return (
         <div className="updateBookMod modal">
             <div className="modal-content">
-                <h2>Update book: {findBookById(selectedBookId).title}</h2>
+                <h2>Update "{findBookById(selectedBookId).title}":</h2>
                 <div className="labels">
                     <label>Author:</label>
                     <input type="text" value={inputAuthorValue}

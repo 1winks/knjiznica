@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import EditionsOrderRow from "./OrderEditions/EditionsOrderRow";
 import {getJwt} from "../../../../Utils/userData";
 import UsernameSearchInput from "./UsernameSearchInput";
+import PopupError from "../../PopupError";
 
 const AddOrderCreateMod = ({ editions, setCreatorModal, setError, setAdded,
                                setNumSelected, setEditionsToAdd, closeParentModal}) => {
@@ -15,6 +16,8 @@ const AddOrderCreateMod = ({ editions, setCreatorModal, setError, setAdded,
     const [loading, setLoading] = useState(true);
     const [error2, setError2] = useState(null);
     const [username, setUsername] = useState("");
+
+    const [errorModal, setErrorModal] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -49,12 +52,19 @@ const AddOrderCreateMod = ({ editions, setCreatorModal, setError, setAdded,
     }
 
     const onAdd = async () => {
-        if (endDate === "" || startDate === "" || username === "") {
-            setFormError("Input can't be empty!");
+        if (endDate === "" || startDate === "") {
+            setFormError("Date input can't be empty!");
+            setErrorModal(true);
             return;
         }
         if (startDate >= endDate) {
             setFormError("End date must be a date after the start date!");
+            setErrorModal(true);
+            return;
+        }
+        if (username === "") {
+            setFormError("Not a valid username!");
+            setErrorModal(true);
             return;
         }
         setFormError("");
@@ -75,25 +85,24 @@ const AddOrderCreateMod = ({ editions, setCreatorModal, setError, setAdded,
                 body: JSON.stringify(requestBody)
             });
             if (!response.ok) {
-                let errorMessage = 'Failed to create order';
-                const contentType = response.headers.get('content-type');
-                if (contentType && contentType.includes('application/json')) {
-                    const errorData = await response.json();
-                    errorMessage = errorData.message || errorMessage;
-                } else {
-                    errorMessage = await response.text();
-                }
-                console.log(errorMessage);
-                throw new Error(errorMessage);
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to create order');
             }
+            console.log("Success creating!");
             setAdded(prevAdded => !prevAdded);
-        } catch (error) {
-            setError(error.message);
-            console.error('Error creating order:', error);
-        } finally {
             closeModal();
+        } catch (error) {
+            setFormError(error.message || "Unknown error occurred");
+            setErrorModal(true);
+            console.error("Error:", error);
         }
     }
+
+    const closeErrorModal = () => {
+        setErrorModal(false);
+        setFormError("");
+    }
+
 
     if (loading) return <p>Loading...</p>;
     if (error2) return <p>Error: {error2}</p>;
@@ -101,9 +110,8 @@ const AddOrderCreateMod = ({ editions, setCreatorModal, setError, setAdded,
         <div className="modal">
             <div className="modal-content">
                 <h2>Create Order</h2>
-                {formError && <div style={{color: "red"}}>{formError}</div>}
                 <div className="addLabels">
-                    <label>Username:</label>
+                    <label>Selected user: <span style={{color: "blue"}}>{username}</span></label>
                     <UsernameSearchInput usernames={data} setUsername={setUsername} />
                     <label>Start Date:</label>
                     <input
@@ -130,6 +138,10 @@ const AddOrderCreateMod = ({ editions, setCreatorModal, setError, setAdded,
                     <button onClick={closeModal}>Close</button>
                 </div>
             </div>
+            {errorModal && <PopupError
+                        closeErrorModal={closeErrorModal}
+                        errorText={formError}
+            />}
         </div>
     );
 };

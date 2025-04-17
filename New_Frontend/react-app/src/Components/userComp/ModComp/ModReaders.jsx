@@ -2,7 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {getJwt} from "../../../Utils/userData";
 import ReaderTable from "./Tables/ReaderTable";
 import ReaderRenewModal from "./Modals/ReaderRenewModal";
-import ReaderUpdateModal from "./Modals/OrderEditions/ReaderUpdateModal";
+import ReaderUpdateModal from "./Modals/ReaderUpdateModal";
+import PopupError from "../PopupError";
 
 const ModReaders = () => {
     const [data, setData] = useState([]);
@@ -15,13 +16,16 @@ const ModReaders = () => {
     const [emailSort, setEmailSort] = useState(true);
 
     const [modal, setModal] = useState(false);
-    const [renewModal, setRenewModal] = useState(false);
     const [formError, setFormError] = useState("");
+    const [errorModal, setErrorModal] = useState(false);
     const [selectedReaderId, SetSelectedReaderId] = useState(0);
     const [inputAddressValue, setInputAddressValue] = useState("");
     const [inputPhoneValue, setInputPhoneValue] = useState("");
 
     const [added, setAdded] = useState(false);
+    const [renewModal, setRenewModal] = useState(false);
+
+    const phoneRegex = /^(\+385\s?|0)(\d{1,3})([\s\-]?\d{3,4}){1,2}$/;
 
     useEffect(() => {
         const fetchData = async () => {
@@ -57,12 +61,24 @@ const ModReaders = () => {
 
     const onUpdate = async (readerId) => {
         if (inputAddressValue.trim() === "" || inputPhoneValue.trim() === "") {
-            setFormError("Input cannot be empty!");
+            setFormError("Input can't be empty!");
+            setErrorModal(true);
             return;
-        } else {
-            setFormError("");
-            console.log("Form submitted with value:", );
         }
+        if (!phoneRegex.test(inputPhoneValue.trim())) {
+            const examplePhone =
+                "\nHelp: using the croatian format\n" +
+                "+385 XX XXX XXXX\n" +
+                "0XX XXX XXXX\n" +
+                "01-XXX-XXXX\n" +
+                "0XX XXX XXX\n" +
+                "+385XX-XXX-XXXX\n" +
+                "(Where X is 0-9)";
+            setFormError("Please enter a valid phone number!" + examplePhone);
+            setErrorModal(true);
+            return;
+        }
+        setFormError("");
         try {
             const response = await fetch(
                 `http://localhost:8080/api/resources/readers/update/${readerId}`, {
@@ -77,13 +93,16 @@ const ModReaders = () => {
                 })
             });
             if (!response.ok) {
-                throw new Error('Failed to fetch data');
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to renew membership');
             }
+            console.log("Success updating!");
             setAdded(prevState => !prevState);
-        } catch (err) {
-            setError(error.message);
-        } finally {
             closeModal();
+        } catch (error) {
+            setFormError(error.message || "Unknown error occurred");
+            setErrorModal(true);
+            console.error("Error:", error);
         }
     }
 
@@ -110,6 +129,11 @@ const ModReaders = () => {
 
     const findReaderById = () => {
         return data.find((r) => r.readerId === selectedReaderId);
+    }
+
+    const closeErrorModal = () => {
+        setErrorModal(false);
+        setFormError("");
     }
 
     if (loading) return <p>Loading...</p>;
@@ -148,6 +172,10 @@ const ModReaders = () => {
                         selectedReaderId={selectedReaderId}
                         setAdded={setAdded}
                         findReaderById={findReaderById}
+            />}
+            {errorModal && <PopupError
+                                    closeErrorModal={closeErrorModal}
+                                    errorText={formError}
             />}
         </div>
     );

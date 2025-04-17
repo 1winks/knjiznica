@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 const ReaderUpdateModal = ({ closeModal, selectedReaderId, findReaderById, onUpdate, formError,
                            inputAddressValue, setInputAddressValue, inputPhoneValue, setInputPhoneValue}) => {
@@ -9,7 +9,6 @@ const ReaderUpdateModal = ({ closeModal, selectedReaderId, findReaderById, onUpd
         <div className="modal">
             <div className="modal-content">
                 <h2>Update {username}'s profile:</h2>
-                {formError && <div style={{color: "red"}}>{formError}</div>}
                 <div className="labels">
                     <label>Address:</label>
                     <input type="text" value={inputAddressValue}

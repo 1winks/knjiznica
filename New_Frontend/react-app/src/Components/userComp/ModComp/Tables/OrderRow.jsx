@@ -20,12 +20,12 @@ const OrderRow = ({ orderId, readerId, username, startDate, endDate, returnedDat
     return (
         <div className="orderRow">
             <div>{username}</div>
-            <div>
+            <div className="status-indicator">
                 {returnedDate ?
-                    (<Check className="w-5 h-5 text-green-500"/>)
-                    : (<X className="w-5 h-5 text-red-500"/>)
+                    (<Check className="icon-green"/>)
+                    : (<X className="icon-red"/>)
                 }
-                {daysLate > 0 && ` ${daysLateString}`}
+                {daysLate > 0 && <span className="late-text">{daysLateString}</span>}
             </div>
             <div>{startDate}</div>
             <div>{endDate}</div>

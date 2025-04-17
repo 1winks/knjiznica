@@ -5,6 +5,7 @@ import EditionsOrderMod from "./Modals/OrderEditions/EditionsOrderMod";
 import AddOrderMod from "./Modals/AddOrderMod";
 import UpdateOrderMod from "./Modals/UpdateOrderMod";
 import DeleteOrderMod from "./Modals/DeleteOrderMod";
+import PopupError from "../PopupError";
 
 const ModOrders = () => {
     const [data, setData] = useState([]);
@@ -15,7 +16,8 @@ const ModOrders = () => {
     const [filteredUsers, setFilteredUsers] = useState([]);
     const [userSort, setUserSort] = useState(true);
     const [activitySort, setActivitySort] = useState(false);
-    const [dateSort, setDateSort] = useState(true);
+    const [dateStartSort, setDateStartSort] = useState(true);
+    const [dateEndSort, setDateEndSort] = useState(true);
     const [lateFilter, setLateFilter] = useState(false);
     const [added, setAdded] = useState(false);
 
@@ -27,6 +29,7 @@ const ModOrders = () => {
     const [addModal, setAddModal] = useState(false);
     const [updateModal, setUpdateModal] = useState(false);
     const [deleteModal, setDeleteModal] = useState(false);
+    const [errorModal, setErrorModal] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -70,14 +73,17 @@ const ModOrders = () => {
         const today = new Date().toISOString().split("T")[0];
         if (returnDate === "") {
             setFormError("Date input can't be empty!");
+            setErrorModal(true);
             return;
         }
         if (returnDate < order.startDate) {
             setFormError("Must be a date after start and until today!");
+            setErrorModal(true);
             return;
         }
         if (returnDate > today) {
             setFormError("Must be a date after start and until today!");
+            setErrorModal(true);
             return;
         }
         setFormError("");
@@ -98,27 +104,26 @@ const ModOrders = () => {
                 body: JSON.stringify(requestBody)
             });
             if (!response.ok) {
-                let errorMessage = 'Failed to update order';
-                const contentType = response.headers.get('content-type');
-                if (contentType && contentType.includes('application/json')) {
-                    const errorData = await response.json();
-                    errorMessage = errorData.message || errorMessage;
-                } else {
-                    errorMessage = await response.text();
-                }
-                console.log(errorMessage);
-                throw new Error(errorMessage);
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to update order');
             }
+            console.log("Success updating!");
             setAdded(prevAdded => !prevAdded);
-        } catch (error) {
-            setError(error.message);
-            console.error('Error updating order:', error);
-        } finally {
             closeModal();
+        } catch (error) {
+            setFormError(error.message || "Unknown error occurred");
+            setErrorModal(true);
+            console.error("Error:", error);
         }
     }
 
     const onDelete = async (orderId) => {
+        const order = findOrderById(orderId);
+        if (!order.returnedDate) {
+            setFormError("Cant delete active orders!");
+            setErrorModal(true);
+            return;
+        }
         try {
             const response = await fetch(`http://localhost:8080/api/resources/orders/delete/${orderId}`, {
                 method: 'DELETE',
@@ -128,23 +133,16 @@ const ModOrders = () => {
                 }
             });
             if (!response.ok) {
-                let errorMessage = 'Failed to delete order';
-                const contentType = response.headers.get('content-type');
-                if (contentType && contentType.includes('application/json')) {
-                    const errorData = await response.json();
-                    errorMessage = errorData.message || errorMessage;
-                } else {
-                    errorMessage = await response.text();
-                }
-                console.log(errorMessage);
-                throw new Error(errorMessage);
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to delete order');
             }
+            console.log("Success deleting!");
             setAdded(prevAdded => !prevAdded);
-        } catch (error) {
-            setError(error.message);
-            console.error('Error deleting order:', error);
-        } finally {
             closeModal();
+        } catch (error) {
+            setFormError(error.message || "Unknown error occurred");
+            setErrorModal(true);
+            console.error("Error:", error);
         }
     }
 
@@ -170,19 +168,34 @@ const ModOrders = () => {
         );
         setActivitySort(prev => !prev);
     }
-    const sortByDate = () => {
+    const sortByStartDate = () => {
         setFilteredUsers(prevUsers =>
             prevUsers.toSorted((a,b) => {
                 const dateA = new Date(a.startDate);
                 const dateB = new Date(b.startDate);
-                if (dateSort) {
+                if (dateStartSort) {
                     return dateA - dateB;
                 } else {
                     return dateB - dateA;
                 }
             })
         );
-        setDateSort(prev => !prev);
+        setDateStartSort(prev => !prev);
+    }
+
+    const sortByEndDate = () => {
+        setFilteredUsers(prevUsers =>
+            prevUsers.toSorted((a,b) => {
+                const dateA = new Date(a.endDate);
+                const dateB = new Date(b.endDate);
+                if (dateEndSort) {
+                    return dateA - dateB;
+                } else {
+                    return dateB - dateA;
+                }
+            })
+        );
+        setDateEndSort(prev => !prev);
     }
 
     const filterLate = () => {
@@ -216,6 +229,11 @@ const ModOrders = () => {
         setDeleteModal(false);
     }
 
+    const closeErrorModal = () => {
+        setErrorModal(false);
+        setFormError("");
+    }
+
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
     return (
@@ -237,7 +255,8 @@ const ModOrders = () => {
                         setDeleteModal={setDeleteModal}
                         sortByUser={sortByUser} userSort={userSort}
                         sortByActivity={sortByActivity} activitySort={activitySort}
-                        sortByDate={sortByDate} dateSort={dateSort}
+                        sortByStartDate={sortByStartDate} sortByEndDate={sortByEndDate}
+                        dateStartSort={dateStartSort} dateEndSort={dateEndSort}
                         filterLate={filterLate} lateFilter={lateFilter}
             />
             {editionsModal && <EditionsOrderMod closeModal={closeModal}
@@ -258,6 +277,10 @@ const ModOrders = () => {
             {deleteModal && <DeleteOrderMod closeModal={closeModal}
                                             selectedOrderId={selectedOrderId}
                                             onDelete={onDelete}
+            />}
+            {errorModal && <PopupError
+                                    closeErrorModal={closeErrorModal}
+                                    errorText={formError}
             />}
         </div>
     );

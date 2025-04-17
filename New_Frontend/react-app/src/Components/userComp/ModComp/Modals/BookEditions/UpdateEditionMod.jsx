@@ -5,7 +5,7 @@ const UpdateEditionMod = ({ closeEditionModal, onUpdate, selectedEditionId, find
     return (
         <div className="addBookMod modal">
             <div className="modal-content">
-                <h2>Update edition: {findEditionById().isbn}</h2>
+                <h2>Update edition {findEditionById().isbn}:</h2>
                 <div className="labels">
                     <label>Available:</label>
                     <label>

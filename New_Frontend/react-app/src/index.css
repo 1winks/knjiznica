@@ -1005,6 +1005,20 @@ button.delete-btn2:hover {
     background: #f0f0f0;
 }
 
+.clear-button {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #888;
+    padding: 0;
+    line-height: 1;
+}
+
 .userRecommendHelper {
     height: 100%;
     display: flex;
@@ -1103,4 +1117,35 @@ button.delete-btn2:hover {
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
+}
+
+.errorModal {
+    text-align: center;
+}
+
+.errorModal p {
+    line-height: 1.5rem;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.icon-green {
+    color: black;
+    width: 20px;
+    height: 20px;
+}
+
+.icon-red {
+    color: red;
+    width: 20px;
+    height: 20px;
+}
+
+.late-text {
+    color: black;
+    font-size: 0.9em;
 }

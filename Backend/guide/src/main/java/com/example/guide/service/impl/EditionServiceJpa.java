@@ -2,10 +2,8 @@ package com.example.guide.service.impl;
 
 import com.example.guide.controller.responses.EditionAdderException;
 import com.example.guide.controller.responses.EditionDeletionException;
-import com.example.guide.domain.Book;
-import com.example.guide.domain.BookEdition;
-import com.example.guide.domain.Edition;
-import com.example.guide.domain.EditionOrder;
+import com.example.guide.controller.responses.EditionUpdaterException;
+import com.example.guide.domain.*;
 import com.example.guide.dto.EditionDTO;
 import com.example.guide.dto.EditionDTO2;
 import com.example.guide.repository.BookEditionRepository;
@@ -13,6 +11,7 @@ import com.example.guide.repository.BookRepository;
 import com.example.guide.repository.EditionOrderRepository;
 import com.example.guide.repository.EditionRepository;
 import com.example.guide.service.EditionService;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -107,6 +106,14 @@ public class EditionServiceJpa implements EditionService {
     public Edition updateEdition(Long editionId, EditionDTO editionDTO) {
         Edition edition = editionRepo.findById(editionId)
                 .orElseThrow(() -> new RuntimeException("Edition not found with ID: " + editionId));
+        List<EditionOrder> editionOrders = editionOrderRepo.findAllByEdition(edition);
+        for (EditionOrder editionOrder : editionOrders) {
+            Order order = editionOrder.getOrder();
+            if (order.getReturnedDate()==null) {
+                throw new EditionUpdaterException("Can't update a currently borrowed book!");
+            }
+        }
+
         edition.setAvailable(editionDTO.getAvailable());
         edition.setBorrowDate(editionDTO.getBorrowDate());
         edition.setReturnDate(editionDTO.getReturnDate());

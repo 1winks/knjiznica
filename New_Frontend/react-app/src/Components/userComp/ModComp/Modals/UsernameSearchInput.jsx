@@ -26,16 +26,33 @@ const UsernameSearchInput = ({ usernames, setUsername }) => {
         setShowDropdown(false);
     };
 
+    const clearSearch = () => {
+        setSearchTerm('');
+        setUsername('');
+        setFilteredUsernames(usernames);
+        setShowDropdown(false);
+    };
+
     return (
         <div className="username-search-container">
             <input
                 type="text"
                 value={searchTerm}
-                placeholder="Enter username"
+                placeholder="Search for user..."
                 onChange={handleInputChange}
                 onFocus={() => setShowDropdown(true)}
                 onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
             />
+            {(
+                <button
+                    onClick={clearSearch}
+                    title="Clear user selection"
+                    className="clear-button"
+                    aria-label="Clear"
+                >
+                    ✕
+                </button>
+            )}
             {showDropdown && filteredUsernames.length > 0 && (
                 <ul className="dropdown-list">
                     {filteredUsernames.map((username, index) => (
