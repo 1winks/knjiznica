@@ -1,5 +1,6 @@
 package com.example.guide.service;
 
+import com.example.guide.authentication.models.User;
 import com.example.guide.domain.Reader;
 import com.example.guide.dto.DateDTO;
 import com.example.guide.dto.ReaderDTO;
@@ -20,4 +21,6 @@ public interface ReaderService {
     Reader renewReader(Long id, DateDTO dateDTO);
 
     List<ReadersResponse2> listActive();
+
+    void deleteReader(User user);
 }

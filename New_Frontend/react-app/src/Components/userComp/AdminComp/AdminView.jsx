@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {getJwt} from "../../../Utils/userData";
 import UserTable from "./UserTable";
+import PopupError from "../PopupError";
 
 const AdminView = () => {
     const [data, setData] = useState([]);
@@ -11,9 +12,13 @@ const AdminView = () => {
     const [filteredUsers, setFilteredUsers] = useState([]);
     const [ roleSort, setRoleSort ] = useState(false);
     const [ nameSort, setNameSort ] = useState(true);
+    const [added, setAdded] = useState(false);
 
     const [modal, setModal] = useState(false);
     const [selectedUserId, SetSelectedUserId] = useState(0);
+
+    const [errorModal, setErrorModal] = useState(false);
+    const [formError, setFormError] = useState("");
 
     useEffect(() => {
         const fetchData = async () => {
@@ -30,7 +35,6 @@ const AdminView = () => {
                 }
                 const result = await response.json();
                 setData(result);
-                setFilteredUsers(result);
             } catch (error) {
                 setError(error.message);
             } finally {
@@ -38,7 +42,7 @@ const AdminView = () => {
             }
         };
         fetchData();
-    }, []);
+    }, [added]);
 
     useEffect(() => {
         const filtered = data.filter((user) =>
@@ -60,12 +64,13 @@ const AdminView = () => {
                 const errorData = await response.json();
                 throw new Error(errorData.message || 'Failed to delete user');
             }
-            setData(data.filter(user => user.id !== id));
-        } catch (error) {
-            setError(error.message);
-            console.error('Error deleting user:', error);
-        } finally {
+            console.log("Success deleting!")
+            setAdded(prevAdded => !prevAdded);
             closeModal();
+        } catch (error) {
+            setFormError(error.message || "Unknown error occurred");
+            setErrorModal(true);
+            console.error("Error:", error);
         }
     }
 
@@ -87,6 +92,11 @@ const AdminView = () => {
     const closeModal = () => {
         SetSelectedUserId(0);
         setModal(false);
+    }
+
+    const closeErrorModal = () => {
+        setFormError("");
+        setErrorModal(false);
     }
 
     if (loading) return <p>Loading...</p>;
@@ -120,6 +130,7 @@ const AdminView = () => {
                     </div>
                 </div>
             )}
+            {errorModal && <PopupError errorText={formError} closeErrorModal={closeErrorModal}/>}
         </div>
     );
 };

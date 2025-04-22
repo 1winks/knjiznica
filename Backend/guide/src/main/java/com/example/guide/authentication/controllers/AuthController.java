@@ -15,8 +15,12 @@ import com.example.guide.authentication.repository.RoleRepository;
 import com.example.guide.authentication.repository.UserRepository;
 import com.example.guide.authentication.security.jwt.JwtUtils;
 import com.example.guide.authentication.security.services.UserDetailsImpl;
+import com.example.guide.controller.responses.UserAdderException;
+import com.example.guide.controller.responses.UserDeleteException;
 import com.example.guide.domain.Reader;
 import com.example.guide.repository.ReaderRepository;
+import com.example.guide.service.OrderReaderService;
+import com.example.guide.service.ReaderService;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +58,12 @@ public class AuthController {
   @Autowired
   ReaderRepository readerRepository;
 
+  @Autowired
+  OrderReaderService orderReaderService;
+
+  @Autowired
+  ReaderService readerService;
+
   @PostMapping("/signin")
   public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
@@ -78,14 +88,10 @@ public class AuthController {
   @PostMapping("/signup")
   public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
     if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-      return ResponseEntity
-          .badRequest()
-          .body(new MessageResponse("Error: Username is already taken!"));
+      throw new UserAdderException("Username already in use!");
     }
     if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-      return ResponseEntity
-          .badRequest()
-          .body(new MessageResponse("Error: Email is already in use!"));
+      throw new UserAdderException("Email already in use!");
     }
 
     User user = new User(signUpRequest.getUsername(),
@@ -109,14 +115,10 @@ public class AuthController {
   @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<?> registerAnyUser(@Valid @RequestBody SignupRequest signUpRequest) {
     if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-      return ResponseEntity
-              .badRequest()
-              .body(new MessageResponse("Error: Username is already taken!"));
+      throw new UserAdderException("Username already in use!");
     }
     if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-      return ResponseEntity
-              .badRequest()
-              .body(new MessageResponse("Error: Email is already in use!"));
+      throw new UserAdderException("Email already in use!");
     }
 
     User user = new User(signUpRequest.getUsername(),
@@ -208,6 +210,14 @@ public class AuthController {
     if (Objects.equals(role, "ROLE_ADMIN")) {
       return ResponseEntity.status(HttpStatus.FORBIDDEN)
               .body(new MessageResponse("Error: Admin users cannot be deleted."));
+    }
+    if (Objects.equals(role, "ROLE_USER")) {
+        if (orderReaderService.existsByUser(user)) {
+          throw new UserDeleteException("Can't delete a user with an existing order history!" +
+                  "\nInform moderators if you wish to do so!");
+        } else {
+          readerService.deleteReader(user);
+        }
     }
     userRepository.deleteById(userId);
     return ResponseEntity.ok(new MessageResponse("User deleted successfully!"));

@@ -1,11 +1,14 @@
 import React, {useState} from 'react';
 import {Link, useNavigate} from "react-router-dom";
 import Footer from "./Footer";
+import PopupError from "../userComp/PopupError";
 
 const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+
     const [errorMessage, setErrorMessage] = useState('');
+    const [errorModal, setErrorModal] = useState(false);
 
     const navigate = useNavigate();
 
@@ -24,8 +27,8 @@ const Login = () => {
             setErrorMessage('Please fill in both fields.');
             return;
         }
-
         setErrorMessage('');
+
         try {
             const response = await fetch(`http://localhost:8080/api/auth/signin`, {
                 method: "POST",
@@ -36,6 +39,7 @@ const Login = () => {
             });
 
             if (!response.ok) {
+                const errorData = await response.json();
                 throw new Error("Login failed. Please check your credentials.");
             }
 
@@ -44,8 +48,15 @@ const Login = () => {
             localStorage.setItem("jwt", jwt);
             navigate("/home");
         } catch (error) {
+            console.error('Error:', error);
             setErrorMessage(error.message);
+            setErrorModal(true);
         }
+    }
+
+    const closeErrorModal = () => {
+        setErrorMessage("");
+        setErrorModal(false);
     }
 
         return (
@@ -53,7 +64,6 @@ const Login = () => {
                     <div className="homeButton"><Link className="link" to="/">Back to Home</Link></div>
                     <div className="registerForm">
                         <h2>Login</h2>
-                        {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                         <form onSubmit={handleSubmit}>
                             <div>
                                 <label htmlFor="username">Username:</label>
@@ -80,6 +90,7 @@ const Login = () => {
                             <button type="submit">Login</button>
                         </form>
                     </div>
+                    {errorModal && <PopupError errorText={errorMessage} closeErrorModal={closeErrorModal}/>}
                     <Footer/>
                 </div>
         );

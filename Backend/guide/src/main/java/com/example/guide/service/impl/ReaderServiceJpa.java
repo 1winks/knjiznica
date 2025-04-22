@@ -1,5 +1,7 @@
 package com.example.guide.service.impl;
 
+import com.example.guide.authentication.models.User;
+import com.example.guide.authentication.repository.UserRepository;
 import com.example.guide.domain.Reader;
 import com.example.guide.dto.DateDTO;
 import com.example.guide.dto.ReaderDTO;
@@ -18,6 +20,9 @@ import java.util.List;
 public class ReaderServiceJpa implements ReaderService {
     @Autowired
     private ReaderRepository readerRepo;
+    @Autowired
+    private UserRepository userRepo;
+
     @Override
     public List<ReadersResponse> listAll() {
         List<Reader> readers = readerRepo.findAll();
@@ -58,7 +63,7 @@ public class ReaderServiceJpa implements ReaderService {
 
     @Override
     public Reader getReaderByUserId(Long userId) {
-        if (readerRepo.existsByUserId(userId)) {
+        if (!readerRepo.existsByUserId(userId)) {
             throw new RuntimeException("Reader doesnt exist for user");
         }
         return readerRepo.findReaderByUserId(userId);
@@ -79,5 +84,12 @@ public class ReaderServiceJpa implements ReaderService {
                 .orElseThrow(() -> new RuntimeException("Reader not found with ID: " + id));
         reader.setMembershipFeeExpiry(dateDTO.getMembershipFeeExpiry());
         return readerRepo.save(reader);
+    }
+
+    @Override
+    public void deleteReader(User user) {
+        Reader reader = getReaderByUserId(user.getId());
+        userRepo.delete(user);
+        readerRepo.delete(reader);
     }
 }

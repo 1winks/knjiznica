@@ -1121,10 +1121,12 @@ button.delete-btn2:hover {
 
 .errorModal {
     text-align: center;
+    color: black;
 }
 
 .errorModal p {
     line-height: 1.5rem;
+    color: gray;
 }
 
 .status-indicator {

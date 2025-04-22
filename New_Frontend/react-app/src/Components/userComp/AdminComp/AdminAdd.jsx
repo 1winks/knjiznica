@@ -1,13 +1,16 @@
 import React, {useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {getJwt} from "../../../Utils/userData";
+import PopupError from "../PopupError";
 
 const AdminAdd = () => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [role, setRole] = useState("user");
+
     const [errorMessage, setErrorMessage] = useState('');
+    const [errorModal, setErrorModal] = useState(false);
 
     const navigate = useNavigate();
 
@@ -31,10 +34,17 @@ const AdminAdd = () => {
 
         if (!email || !password || !username) {
             setErrorMessage('Please fill in all fields.');
+            setErrorModal(true);
+            return;
+        }
+        if (username.length<3 || username.length>20) {
+            setErrorMessage('Username size must be between 3 and 20');
+            setErrorModal(true);
             return;
         }
         if (password.length<6 || password.length>40) {
             setErrorMessage('Password size must be between 6 and 40');
+            setErrorModal(true);
             return;
         }
 
@@ -50,29 +60,40 @@ const AdminAdd = () => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${getJwt() }`
+                'Authorization': `Bearer ${getJwt()}`
             },
             body: JSON.stringify(userData),
         })
-            .then(response => response.json())
+            .then(async response => {
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || "Something went wrong.");
+                }
+                return response.json();
+            })
             .then(data => {
                 setUsername('');
                 setEmail('');
                 setPassword('');
-                setRole('user')
+                setRole('user');
                 role === "mod" ? alert("Moderator added!") : alert("User added!");
             })
             .catch(error => {
                 console.error('Error:', error);
-                setErrorMessage('Something went wrong. Please try again.');
+                setErrorMessage(error.message);
+                setErrorModal(true);
             });
+    }
+
+    const closeErrorModal = () => {
+        setErrorMessage("");
+        setErrorModal(false);
     }
 
     return (
         <div className="adminAdd">
             <div className="registerForm adminRegisterForm">
                 <h2>Add User</h2>
-                {errorMessage && <p style={{color: 'red'}}>{errorMessage}</p>}
                 <form onSubmit={handleSubmit}>
                     <div>
                         <label htmlFor="username">Username</label>
@@ -132,6 +153,7 @@ const AdminAdd = () => {
                     <button type="submit">Add</button>
                 </form>
             </div>
+            {errorModal && <PopupError errorText={errorMessage} closeErrorModal={closeErrorModal} />}
         </div>
     );
 };

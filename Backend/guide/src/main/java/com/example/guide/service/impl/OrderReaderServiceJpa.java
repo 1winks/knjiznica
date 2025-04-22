@@ -1,5 +1,6 @@
 package com.example.guide.service.impl;
 
+import com.example.guide.authentication.models.User;
 import com.example.guide.domain.*;
 import com.example.guide.repository.OrderReaderRepository;
 import com.example.guide.service.OrderReaderService;
@@ -32,6 +33,13 @@ public class OrderReaderServiceJpa implements OrderReaderService {
     public List<Order> getOrderForUser(Long userId) {
         Reader reader = readerService.getReaderByUserId(userId);
         return getOrders(reader);
+    }
+
+    @Override
+    public boolean existsByUser(User user) {
+        Reader reader = readerService.getReaderByUserId(user.getId());
+        List<OrderReader> orderReaders = orderReaderRepo.findAllByReader(reader);
+        return !orderReaders.isEmpty();
     }
 
     private List<Order> getOrders(Reader reader) {
