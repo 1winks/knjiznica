@@ -10,51 +10,8 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-
-    @ExceptionHandler(BookAdderException.class)
-    public ResponseEntity<Map<String, String>> handleBookAdderException(BookAdderException ex) {
-        Map<String, String> response = new HashMap<>();
-        response.put("message", ex.getMessage());
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(BookDeletionException.class)
-    public ResponseEntity<Map<String, String>> handleBookDeletionException(BookDeletionException ex) {
-        Map<String, String> response = new HashMap<>();
-        response.put("message", ex.getMessage());
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(EditionDeletionException.class)
-    public ResponseEntity<Map<String, String>> handleEditionDeletionException(EditionDeletionException ex) {
-        Map<String, String> response = new HashMap<>();
-        response.put("message", ex.getMessage());
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(EditionAdderException.class)
-    public ResponseEntity<Map<String, String>> handleEditionAdderException(EditionAdderException ex) {
-        Map<String, String> response = new HashMap<>();
-        response.put("message", ex.getMessage());
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(EditionUpdaterException.class)
-    public ResponseEntity<Map<String, String>> handleEditionUpdaterException(EditionUpdaterException ex) {
-        Map<String, String> response = new HashMap<>();
-        response.put("message", ex.getMessage());
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(UserDeleteException.class)
-    public ResponseEntity<Map<String, String>> handleUserDeleteException(UserDeleteException ex) {
-        Map<String, String> response = new HashMap<>();
-        response.put("message", ex.getMessage());
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(UserAdderException.class)
-    public ResponseEntity<Map<String, String>> handleUserAdderException(UserAdderException ex) {
+    @ExceptionHandler(SystemException.class)
+    public ResponseEntity<Map<String, String>> handleException(SystemException ex) {
         Map<String, String> response = new HashMap<>();
         response.put("message", ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);

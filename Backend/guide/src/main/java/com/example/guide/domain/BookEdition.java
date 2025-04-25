@@ -9,7 +9,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 @Entity
-@Table(name = "knjiga_izdanje", schema = "public")
+@Table(name = "`book_edition`", schema = "public")
 public class BookEdition {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

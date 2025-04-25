@@ -13,7 +13,7 @@ import java.util.Set;
 @NoArgsConstructor
 @SuperBuilder
 @Entity
-@Table(name = "knjiga", schema = "public")
+@Table(name = "`book`", schema = "public")
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

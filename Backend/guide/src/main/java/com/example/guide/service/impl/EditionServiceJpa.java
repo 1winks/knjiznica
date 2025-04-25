@@ -1,8 +1,6 @@
 package com.example.guide.service.impl;
 
-import com.example.guide.controller.responses.EditionAdderException;
-import com.example.guide.controller.responses.EditionDeletionException;
-import com.example.guide.controller.responses.EditionUpdaterException;
+import com.example.guide.controller.responses.SystemException;
 import com.example.guide.domain.*;
 import com.example.guide.dto.EditionDTO;
 import com.example.guide.dto.EditionDTO2;
@@ -11,7 +9,6 @@ import com.example.guide.repository.BookRepository;
 import com.example.guide.repository.EditionOrderRepository;
 import com.example.guide.repository.EditionRepository;
 import com.example.guide.service.EditionService;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -80,7 +77,7 @@ public class EditionServiceJpa implements EditionService {
     @Override
     public Edition createEdition(EditionDTO editionDTO) {
         if (editionRepo.existsByIsbn(editionDTO.getIsbn())) {
-            throw new EditionAdderException("ISBN already exists!");
+            throw new SystemException("That ISBN already exists!");
         }
 
         Edition edition = new Edition();
@@ -110,7 +107,7 @@ public class EditionServiceJpa implements EditionService {
         for (EditionOrder editionOrder : editionOrders) {
             Order order = editionOrder.getOrder();
             if (order.getReturnedDate()==null) {
-                throw new EditionUpdaterException("Can't update a currently borrowed book!");
+                throw new SystemException("Can't update a currently borrowed book!");
             }
         }
 
@@ -127,7 +124,7 @@ public class EditionServiceJpa implements EditionService {
                 .orElseThrow(() -> new RuntimeException("Edition not found with ID: " + editionId));
         List<EditionOrder> editionOrders = editionOrderRepo.findAllByEdition(edition);
         if (!editionOrders.isEmpty()) {
-            throw new EditionDeletionException("Can't delete once ordered editions!");
+            throw new SystemException("Can't delete once ordered editions!");
         }
         BookEdition bookEdition = bookEditionRepo.findByEdition(edition);
         if (bookEdition != null) {

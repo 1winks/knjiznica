@@ -24,7 +24,8 @@ const UserRecommend = ({ handleView }) => {
                     }),
                 });
                 if (!response.ok) {
-                    throw new Error('Failed to fetch data');
+                    const errorData = await response.json();
+                    throw new Error(errorData.message);
                 }
                 const result = await response.json();
                 setBooksRead(result);
@@ -42,7 +43,8 @@ const UserRecommend = ({ handleView }) => {
                     },
                 });
                 if (!response.ok) {
-                    throw new Error('Failed to fetch data');
+                    const errorData = await response.json();
+                    throw new Error(errorData.message);
                 }
                 const result = await response.json();
                 setBooksPopular(result);
@@ -63,7 +65,8 @@ const UserRecommend = ({ handleView }) => {
                     }),
                 });
                 if (!response.ok) {
-                    throw new Error('Failed to fetch data');
+                    const errorData = await response.json();
+                    throw new Error(errorData.message);
                 }
                 const result = await response.json();
                 setBooksRecommend(result);

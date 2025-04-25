@@ -15,8 +15,7 @@ import com.example.guide.authentication.repository.RoleRepository;
 import com.example.guide.authentication.repository.UserRepository;
 import com.example.guide.authentication.security.jwt.JwtUtils;
 import com.example.guide.authentication.security.services.UserDetailsImpl;
-import com.example.guide.controller.responses.UserAdderException;
-import com.example.guide.controller.responses.UserDeleteException;
+import com.example.guide.controller.responses.SystemException;
 import com.example.guide.domain.Reader;
 import com.example.guide.repository.ReaderRepository;
 import com.example.guide.service.OrderReaderService;
@@ -88,10 +87,10 @@ public class AuthController {
   @PostMapping("/signup")
   public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
     if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-      throw new UserAdderException("Username already in use!");
+      throw new SystemException("Username already in use!");
     }
     if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-      throw new UserAdderException("Email already in use!");
+      throw new SystemException("Email already in use!");
     }
 
     User user = new User(signUpRequest.getUsername(),
@@ -115,10 +114,10 @@ public class AuthController {
   @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<?> registerAnyUser(@Valid @RequestBody SignupRequest signUpRequest) {
     if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-      throw new UserAdderException("Username already in use!");
+      throw new SystemException("Username already in use!");
     }
     if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-      throw new UserAdderException("Email already in use!");
+      throw new SystemException("Email already in use!");
     }
 
     User user = new User(signUpRequest.getUsername(),
@@ -213,7 +212,7 @@ public class AuthController {
     }
     if (Objects.equals(role, "ROLE_USER")) {
         if (orderReaderService.existsByUser(user)) {
-          throw new UserDeleteException("Can't delete a user with an existing order history!" +
+          throw new SystemException("Can't delete a user with an existing order history!" +
                   "\nInform moderators if you wish to do so!");
         } else {
           readerService.deleteReader(user);

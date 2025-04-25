@@ -14,7 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 @SuperBuilder
 @Entity
-@Table(name = "izdanje", schema = "public")
+@Table(name = "`edition`", schema = "public")
 public class Edition {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

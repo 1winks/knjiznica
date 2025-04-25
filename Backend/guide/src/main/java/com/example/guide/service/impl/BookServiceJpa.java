@@ -2,8 +2,7 @@ package com.example.guide.service.impl;
 
 import com.example.guide.authentication.models.User;
 import com.example.guide.authentication.repository.UserRepository;
-import com.example.guide.controller.responses.BookAdderException;
-import com.example.guide.controller.responses.BookDeletionException;
+import com.example.guide.controller.responses.SystemException;
 import com.example.guide.domain.*;
 import com.example.guide.dto.*;
 import com.example.guide.repository.BookEditionRepository;
@@ -41,6 +40,10 @@ public class BookServiceJpa implements BookService {
     @Override
     public List<BookDTO4> listPopular() {
         List<Book> books = bookRepo.findAll();
+        if (books.size()<3) {
+            throw new SystemException("Not enough books!" +
+                    "The system needs at least 3...");
+        }
         List<BookDTO4> popular = new ArrayList<>();
         books.sort(Comparator.comparing(Book::getPopularity).reversed());
         for (int i=0; i<3; i++) {
@@ -72,7 +75,7 @@ public class BookServiceJpa implements BookService {
     @Override
     public Book createBook(BookDTO bookDTO) {
         if (bookRepo.existsByTitle(bookDTO.getTitle())) {
-            throw new BookAdderException("Book with that title already exists!");
+            throw new SystemException("A book with that title already exists!");
         }
         Book book = new Book();
         book.setTitle(bookDTO.getTitle());
@@ -96,7 +99,7 @@ public class BookServiceJpa implements BookService {
                 .orElseThrow(() -> new RuntimeException("Book not found with ID: " + bookId));
         List<BookEdition> bookEditions = bookEditionRepo.findAllByBook(book);
         if (!bookEditions.isEmpty()) {
-            throw new BookDeletionException("Can't delete books with editions!");
+            throw new SystemException("Can't delete books with existing editions!");
         }
         bookRepo.delete(book);
     }
