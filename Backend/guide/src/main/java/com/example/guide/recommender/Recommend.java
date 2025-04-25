@@ -35,7 +35,6 @@ public class Recommend {
         for (int i = 0; i < limit; i++) {
             Map.Entry<Book, Double> entry = sortedRecommended.get(i);
             Book book = entry.getKey();
-            Double score = entry.getValue();
             BookDTO4 bookDTO = new BookDTO4();
             bookDTO.setTitle(book.getTitle());
             bookDTO.setAuthor(book.getAuthor());

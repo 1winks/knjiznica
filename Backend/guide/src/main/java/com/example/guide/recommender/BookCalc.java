@@ -31,7 +31,7 @@ public class BookCalc {
             double popularity = ((double) book.getPopularity())/sumPopularity;
             Double userGenreScore = userScores.get("genreScores").get(genre);
             Double userAuthorScore = userScores.get("authorScores").get(author);
-            Double score = 1 + popularity + userGenreScore + userAuthorScore;
+            Double score = popularity + userGenreScore + userAuthorScore;
             bookScores.put(book, score);
         }
         return bookScores;
