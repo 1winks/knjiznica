@@ -3,6 +3,8 @@ import {Link, useNavigate} from "react-router-dom";
 import Footer from "./Footer";
 import PopupError from "../userComp/PopupError";
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -30,7 +32,7 @@ const Login = () => {
         setErrorMessage('');
 
         try {
-            const response = await fetch(`http://localhost:8080/api/auth/signin`, {
+            const response = await fetch(`${apiUrl}/api/auth/signin`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
