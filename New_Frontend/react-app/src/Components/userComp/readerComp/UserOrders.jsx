@@ -3,6 +3,8 @@ import {getJwt, getUsernameFromJwt} from "../../../Utils/userData";
 import UserOrdersTable from "./Tables/UserOrdersTable";
 import OrderEditionModal from "./Modals/OrderEditionModal";
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const UserOrders = () => {
     const username = getUsernameFromJwt();
     const [data, setData] = useState([]);
@@ -21,7 +23,7 @@ const UserOrders = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('http://localhost:8080/api/resources/orders/orderuser', {
+                const response = await fetch(`${apiUrl}/api/resources/orders/orderuser`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

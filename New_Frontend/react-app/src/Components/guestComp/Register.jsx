@@ -3,6 +3,7 @@ import {Link, useNavigate} from "react-router-dom";
 import Footer from "./Footer";
 import PopupError from "../userComp/PopupError";
 
+const apiUrl = process.env.REACT_APP_API_URL;
 const Register = () => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
@@ -45,7 +46,7 @@ const Register = () => {
         const userData = { username, email, password };
 
         try {
-            const response = await fetch(`http://localhost:8080/api/auth/signup`, {
+            const response = await fetch(`${apiUrl}/api/auth/signup`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

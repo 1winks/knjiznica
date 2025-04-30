@@ -4,11 +4,13 @@ import UserHome from "./readerComp/UserHome";
 import ModeratorHome from "./ModComp/ModeratorHome";
 import AdminHome from "./AdminComp/AdminHome";
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const Home = () => {
     const [role, setRole] = useState("");
 
     useEffect( () => {
-        fetch('http://localhost:8080/api/auth/profile', {
+        fetch(`${apiUrl}/api/auth/profile`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

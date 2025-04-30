@@ -6,6 +6,8 @@ import UpdateEditionMod from "./UpdateEditionMod";
 import DeleteEditionMod from "./DeleteEditionMod";
 import PopupError from "../../../PopupError";
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const EditionsMod = ({ closeModal, findBookById, selectedBookId }) => {
     const book = findBookById();
     const [data, setData] = useState([]);
@@ -33,7 +35,7 @@ const EditionsMod = ({ closeModal, findBookById, selectedBookId }) => {
         const fetchData = async () => {
             try {
                 const response = await
-                    fetch(`http://localhost:8080/api/resources/bookEditions/editions/${selectedBookId}`, {
+                    fetch(`${apiUrl}/api/resources/bookEditions/editions/${selectedBookId}`, {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',
@@ -91,7 +93,7 @@ const EditionsMod = ({ closeModal, findBookById, selectedBookId }) => {
         }
         try {
             const response = await fetch(
-                `http://localhost:8080/api/resources/editions/add`, {
+                `${apiUrl}/api/resources/editions/add`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -148,7 +150,7 @@ const EditionsMod = ({ closeModal, findBookById, selectedBookId }) => {
         setFormError("");
         try {
             const response = await fetch(
-                `http://localhost:8080/api/resources/editions/update/${editionId}`, {
+                `${apiUrl}/api/resources/editions/update/${editionId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -174,7 +176,7 @@ const EditionsMod = ({ closeModal, findBookById, selectedBookId }) => {
 
     const onDelete = async (editionId) => {
         try {
-            const response = await fetch(`http://localhost:8080/api/resources/editions/delete/${editionId}`, {
+            const response = await fetch(`${apiUrl}/api/resources/editions/delete/${editionId}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',

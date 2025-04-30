@@ -2,6 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {getJwt, getUsernameFromJwt} from "../../../Utils/userData";
 import BookElement from "./Tables/BookElement";
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const UserRecommend = ({ handleView }) => {
     const username = getUsernameFromJwt();
     const [booksRead, setBooksRead] = useState([]);
@@ -13,7 +15,7 @@ const UserRecommend = ({ handleView }) => {
     useEffect(() => {
         const fetchBooks = async () => {
             try {
-                const response = await fetch('http://localhost:8080/api/resources/books/numread', {
+                const response = await fetch(`${apiUrl}/api/resources/books/numread`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -35,7 +37,7 @@ const UserRecommend = ({ handleView }) => {
         };
         const fetchPopular = async () => {
             try {
-                const response = await fetch('http://localhost:8080/api/resources/books/popular', {
+                const response = await fetch(`${apiUrl}/api/resources/books/popular`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -54,7 +56,7 @@ const UserRecommend = ({ handleView }) => {
         };
         const fetchRecommend = async () => {
             try {
-                const response = await fetch('http://localhost:8080/api/resources/books/recommend', {
+                const response = await fetch(`${apiUrl}/api/resources/books/recommend`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

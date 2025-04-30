@@ -5,6 +5,8 @@ import ReaderRenewModal from "./Modals/ReaderRenewModal";
 import ReaderUpdateModal from "./Modals/ReaderUpdateModal";
 import PopupError from "../PopupError";
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const ModReaders = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -30,7 +32,7 @@ const ModReaders = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('http://localhost:8080/api/resources/readers', {
+                const response = await fetch(`${apiUrl}/api/resources/readers`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -81,7 +83,7 @@ const ModReaders = () => {
         setFormError("");
         try {
             const response = await fetch(
-                `http://localhost:8080/api/resources/readers/update/${readerId}`, {
+                `${apiUrl}/api/resources/readers/update/${readerId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

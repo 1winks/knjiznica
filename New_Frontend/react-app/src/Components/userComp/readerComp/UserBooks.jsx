@@ -3,6 +3,8 @@ import {getJwt, getUsernameFromJwt} from "../../../Utils/userData";
 import UserBooksTable from "./Tables/UserBooksTable";
 import BookEditionModal from "./Modals/BookEditionModal";
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const UserBooks = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -22,7 +24,7 @@ const UserBooks = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('http://localhost:8080/api/resources/books/bookeds', {
+                const response = await fetch(`${apiUrl}/api/resources/books/bookeds`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

@@ -2,6 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {getJwt} from "../../../../Utils/userData";
 import EditionsAvailableTable from "./OrderEditions/EditionsAvailableTable";
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const AddOrderMod = ({ closeModal, setAdded }) => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -18,7 +20,7 @@ const AddOrderMod = ({ closeModal, setAdded }) => {
         const fetchData = async () => {
             try {
                 const response = await
-                    fetch(`http://localhost:8080/api/resources/editions/available`, {
+                    fetch(`${apiUrl}/api/resources/editions/available`, {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',

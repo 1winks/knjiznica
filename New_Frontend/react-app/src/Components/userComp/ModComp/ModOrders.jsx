@@ -7,6 +7,7 @@ import UpdateOrderMod from "./Modals/UpdateOrderMod";
 import DeleteOrderMod from "./Modals/DeleteOrderMod";
 import PopupError from "../PopupError";
 
+const apiUrl = process.env.REACT_APP_API_URL;
 const ModOrders = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -34,7 +35,7 @@ const ModOrders = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('http://localhost:8080/api/resources/orders', {
+                const response = await fetch(`${apiUrl}/api/resources/orders`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -95,7 +96,7 @@ const ModOrders = () => {
             "izdanjaId":order.izdanjaId
         }
         try {
-            const response = await fetch(`http://localhost:8080/api/resources/orders/update/${orderId}`, {
+            const response = await fetch(`${apiUrl}/api/resources/orders/update/${orderId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -125,7 +126,7 @@ const ModOrders = () => {
             return;
         }
         try {
-            const response = await fetch(`http://localhost:8080/api/resources/orders/delete/${orderId}`, {
+            const response = await fetch(`${apiUrl}/api/resources/orders/delete/${orderId}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',

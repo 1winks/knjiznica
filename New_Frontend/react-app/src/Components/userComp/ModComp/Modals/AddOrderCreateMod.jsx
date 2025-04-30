@@ -4,6 +4,8 @@ import {getJwt} from "../../../../Utils/userData";
 import UsernameSearchInput from "./UsernameSearchInput";
 import PopupError from "../../PopupError";
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const AddOrderCreateMod = ({ editions, setCreatorModal, setError, setAdded,
                                setNumSelected, setEditionsToAdd, closeParentModal}) => {
     const today = new Date().toISOString().split("T")[0];
@@ -22,7 +24,7 @@ const AddOrderCreateMod = ({ editions, setCreatorModal, setError, setAdded,
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('http://localhost:8080/api/resources/readers/renewed', {
+                const response = await fetch(`${apiUrl}/api/resources/readers/renewed`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -76,7 +78,7 @@ const AddOrderCreateMod = ({ editions, setCreatorModal, setError, setAdded,
             "izdanjaId": editions.map(edition => edition.editionId)
         }
         try {
-            const response = await fetch(`http://localhost:8080/api/resources/orders/add`, {
+            const response = await fetch(`${apiUrl}/api/resources/orders/add`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -2,6 +2,8 @@ import React, {useState} from 'react';
 import {getJwt} from "../../../../Utils/userData";
 import PopupError from "../../PopupError";
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const ReaderRenewModal = ({ closeModal, selectedReaderId, setAdded, findReaderById }) => {
     const today = new Date().toISOString().split("T")[0];
     const monthToday = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
@@ -32,7 +34,7 @@ const ReaderRenewModal = ({ closeModal, selectedReaderId, setAdded, findReaderBy
         }
         try {
             const response = await fetch(
-                `http://localhost:8080/api/resources/readers/renew/${readerId}`, {
+                `${apiUrl}/api/resources/readers/renew/${readerId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',

@@ -3,6 +3,7 @@ import {useNavigate} from "react-router-dom";
 import {getJwt} from "../../../Utils/userData";
 import PopupError from "../PopupError";
 
+const apiUrl = process.env.REACT_APP_API_URL;
 const AdminAdd = () => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
@@ -56,7 +57,7 @@ const AdminAdd = () => {
             role: [role]
         };
 
-        fetch(`http://localhost:8080/api/auth/admin/signup`, {
+        fetch(`${apiUrl}/api/auth/admin/signup`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

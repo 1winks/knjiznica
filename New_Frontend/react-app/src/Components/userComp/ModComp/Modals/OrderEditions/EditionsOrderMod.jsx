@@ -2,6 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {getJwt} from "../../../../../Utils/userData";
 import EditionsOrderTable from "./EditionsOrderTable";
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const EditionsOrderMod = ({ closeModal, selectedOrderId, findOrderById}) => {
     const ids = findOrderById(selectedOrderId).izdanjaId;
 
@@ -19,7 +21,7 @@ const EditionsOrderMod = ({ closeModal, selectedOrderId, findOrderById}) => {
         const fetchData = async () => {
             try {
                 const response = await
-                    fetch(`http://localhost:8080/api/resources/editions/editionsByIds`, {
+                    fetch(`${apiUrl}/api/resources/editions/editionsByIds`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

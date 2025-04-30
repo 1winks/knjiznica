@@ -3,6 +3,8 @@ import {getJwt} from "../../../Utils/userData";
 import UserTable from "./UserTable";
 import PopupError from "../PopupError";
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const AdminView = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -23,7 +25,7 @@ const AdminView = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('http://localhost:8080/api/auth/userroles', {
+                const response = await fetch(`${apiUrl}/api/auth/userroles`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -53,7 +55,7 @@ const AdminView = () => {
 
     const onDelete = async (id) => {
         try {
-            const response = await fetch(`http://localhost:8080/api/auth/delete/${id}`, {
+            const response = await fetch(`${apiUrl}/api/auth/delete/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',

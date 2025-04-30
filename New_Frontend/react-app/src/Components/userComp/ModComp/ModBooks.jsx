@@ -7,6 +7,8 @@ import UpdateBookMod from "./Modals/UpdateBookMod";
 import EditionsMod from "./Modals/BookEditions/EditionsMod";
 import PopupError from "../PopupError";
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 const ModBooks = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -36,7 +38,7 @@ const ModBooks = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('http://localhost:8080/api/resources/books', {
+                const response = await fetch(`${apiUrl}/api/resources/books`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -113,7 +115,7 @@ const ModBooks = () => {
         setFormError("");
         try {
             const response = await fetch(
-                `http://localhost:8080/api/resources/books/add`, {
+                `${apiUrl}/api/resources/books/add`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -148,7 +150,7 @@ const ModBooks = () => {
         setFormError("");
         try {
             const response = await fetch(
-                `http://localhost:8080/api/resources/books/update/${bookId}`, {
+                `${apiUrl}/api/resources/books/update/${bookId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -176,7 +178,7 @@ const ModBooks = () => {
 
     const onDelete = async (bookId) => {
         try {
-            const response = await fetch(`http://localhost:8080/api/resources/books/delete/${bookId}`, {
+            const response = await fetch(`${apiUrl}/api/resources/books/delete/${bookId}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
